@@ -1,0 +1,8 @@
+bin/
+obj/
+*.db
+*.db-journal
+*.log
+.loop-paused
+.escalate-rung
+ledger.jsonl
