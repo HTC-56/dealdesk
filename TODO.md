@@ -19,7 +19,7 @@ Scaffold, migrator, Money and the first tests are already committed (`feat(A1)`,
 - [x] A4 — Create `README.md`: what dealdesk is, requirements, quickstart
   (build, test, run, curl `/healthz` on localhost), layout, gates. Only
   `/healthz` exists — promise nothing else. Spec: §A4.
-- [ ] A5 — Create `tests/DealDesk.Tests/MoneyArithmeticTests.cs`: six more
+- [x] A5 — Create `tests/DealDesk.Tests/MoneyArithmeticTests.cs`: six more
   Money laws (subtraction undoes addition, double negation, Zero identity,
   comparisons, sub-cent rejection, empty Sum). Mirror
   `MoneyPropertyTests.cs`. Spec: §A5.
