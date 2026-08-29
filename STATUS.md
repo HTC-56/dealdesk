@@ -85,3 +85,15 @@ Test count is now 152.
 
 What is still NOT built: the desk page, the ops surface beyond `/healthz`,
 seeded demo data, and deploy packaging.
+
+## Phase G
+
+Phase G is closed. `/metrics` serves hand-rolled Prometheus text with request
+counters (`http_requests_total` by method + status) and a `dealdesk_appraisals`
+gauge showing count per status; every request appends a JSON line to the JSONL
+ops ledger (which keeps the request path the metric labels omit), and a static
+bearer token guards POST, PUT, PATCH and DELETE once `DEALDESK_Auth__Token` is
+set, while reads stay open; an unset token leaves writes open so a fresh clone
+still runs its quickstart. Test count is now 180.
+
+What is still NOT built: the desk page, seeded demo data, and deploy packaging.
