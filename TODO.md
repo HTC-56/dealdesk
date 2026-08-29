@@ -100,8 +100,8 @@ scripts/scrub-check.sh`.** Money on the wire is whole cents; JSON is camelCase.
 
 ## Phase D: lifecycle and the audit trail — see TASK_PHASE_D.md
 
-Phases A–C above are CLOSED and kept only as style references. **Phase D is the
-open one.** `sql/003_audit.sql`, `Domain/Lifecycle.cs`, `Api/AuditDtos.cs` and
+Phases A–C above are CLOSED and kept only as style references. Phase D is
+CLOSED too. `sql/003_audit.sql`, `Domain/Lifecycle.cs`, `Api/AuditDtos.cs` and
 `Api/LifecycleEndpoints.cs` are already committed (`feat(D1)`–`feat(D3)`); the
 tree is green at 76 tests. **Gate for every task: `dotnet build -warnaserror`,
 `dotnet test`, `dotnet format --verify-no-changes`, `bash
@@ -133,3 +133,41 @@ illegal move = 409. Every write needs `changedBy` and `reason`.
 - [x] D10 — Run `bash verify.sh`, append a `## Phase D` section to STATUS.md,
   and flip ROADMAP row 3 to SHIPPED / phase D. Closes Phase D. Gate:
   `bash verify.sh`. Spec: §D10.
+
+## Phase E: recon actuals and variance — see TASK_PHASE_E.md
+
+Phases A–D above are CLOSED and kept only as style references. **Phase E is the
+open one.** `sql/004_recon_actual.sql`, `Domain/ReconVariance.cs`,
+`Api/ReconDtos.cs` and `Api/ReconEndpoints.cs` are already committed
+(`feat(E1)`–`feat(E4)`); the tree is green at 100 tests. **Gate for every task:
+`dotnet build -warnaserror`, `dotnet test`, `dotnet format
+--verify-no-changes`, `bash scripts/scrub-check.sh`.** Variance is
+`actual − estimate`, so positive means the line ran over. A posting hangs off a
+recon LINE and its amount may be negative (a credit) but never zero.
+
+- [ ] E5 — Add the actuals pair (GET + POST
+  `/api/appraisals/{id}/recon-lines/{lineId}/actuals`) to
+  `src/DealDesk/Api/ReconEndpoints.cs`, mirroring the recon-line pair in
+  `WorksheetEndpoints.cs`. `ReconLineBelongs` already exists. Spec: §E5.
+- [ ] E6 — Create `tests/DealDesk.Tests/ReconActualSchemaTests.cs`: six
+  assertions over `sql/004_recon_actual.sql` — good row inserts, three CHECKs
+  reject, a credit is allowed, postings cascade with their line. Mirror
+  `AuditSchemaTests.cs`. Spec: §E6.
+- [ ] E7 — Create `tests/DealDesk.Tests/ReconVarianceTests.cs`: six arithmetic
+  laws over `Domain/ReconVariance.cs` (line totals, credits, unposted lines,
+  worksheet totals, category rollup, refusals). Mirror `LifecycleTests.cs`;
+  no database. Spec: §E7.
+- [ ] E8 — Create `tests/DealDesk.Tests/ReconActualApiTests.cs`: six HTTP
+  assertions over the actuals pair (201, list order, two 400s, a credit, two
+  404s). Mirror `WalkItemApiTests.cs`. Spec: §E8.
+- [ ] E9 — Create `tests/DealDesk.Tests/ReconVarianceApiTests.cs`: six HTTP
+  assertions over `GET .../recon-variance` (empty worksheet, unposted lines,
+  a posted line, totals, byCategory, 404). Mirror `ReconActualApiTests.cs`.
+  Spec: §E9.
+- [ ] E10 — Edit `README.md`: add the three new routes to `## The API`, one
+  recon-variance paragraph, and change the healthz sample's schema to
+  `004_recon_actual`. Promise nothing unbuilt. Gate: `bash verify.sh`.
+  Spec: §E10.
+- [ ] E11 — Run `bash verify.sh`, append a `## Phase E` section to STATUS.md,
+  and flip ROADMAP row 4 to SHIPPED / phase E. Closes Phase E. Gate:
+  `bash verify.sh`. Spec: §E11.

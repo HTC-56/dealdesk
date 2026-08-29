@@ -8,7 +8,7 @@ are the one permitted exception to append-only docs.
 | 1 | .NET 8 minimal API + SQLite/Dapper + migrator | SHIPPED | A | scaffold, migrator, Money, 001_init, Phase A gates |
 | 2 | Appraisal worksheet + offer math with visible derivation | SHIPPED | B–C | worksheet, child collections and the offer endpoint with its visible derivation |
 | 3 | Lifecycle + append-only audit trail | SHIPPED | D | lifecycle rules, audited status moves and field revisions, append-only trail served newest-first |
-| 4 | Recon actuals + variance | NOT BUILT | — | |
+| 4 | Recon actuals + variance | PARTIAL | E | schema, variance math and the variance endpoint in; the posting routes and tests are the open phase |
 | 5 | The three reports (look-to-book, recon variance, gross by appraiser) | NOT BUILT | — | |
 | 6 | The desk page (self-contained) | NOT BUILT | — | hero screenshot |
 | 7 | Ops surface (/healthz, /metrics, ledger, bearer auth) | PARTIAL | A | /healthz only; /metrics, ledger, bearer auth still open |
@@ -102,6 +102,38 @@ planning lane declares PROJECT SPEC COMPLETE rather than inventing scope.
   and status moves through the lifecycle route, which checks the transition.
   Edits to a `won`/`lost` worksheet are allowed rather than refused: SPEC.md
   states no such rule, and the trail records who changed a closed file and why.
+- **Variance is `actual − estimate`, positive meaning over** (Phase E,
+  `src/DealDesk/Domain/ReconVariance.cs`). SPEC.md names "variance (estimate
+  vs actual)" without fixing the sign. Taken as actual minus estimate, so a
+  positive number reads the way a used-car director says it out loud — "we are
+  four hundred over on paint". Fixed in one place and used unchanged at every
+  level (line, category, worksheet), so no two numbers on the page can
+  disagree about which direction is bad.
+- **Actuals post against a recon LINE, never bare against the appraisal**
+  (Phase E, `sql/004_recon_actual.sql`). SPEC.md says actuals post
+  "line-by-line", so the FK points at `recon_line` and there is no
+  appraisal-level posting. Work nobody estimated is entered as a recon line
+  with an estimate of 0 and posted against normally — the trail still shows
+  what was expected alongside what was spent. Many postings per line, because
+  one repair order is rarely one invoice.
+- **A posting's amount is signed but never zero** (Phase E,
+  `sql/004_recon_actual.sql`). `recon_line.estimate` is constrained
+  non-negative; `recon_actual.amount` deliberately is not, because
+  `OfferMath.cs` already recorded that a recon credit belongs in the actuals
+  rather than in an estimate line. A returned part posts negative. Zero is
+  refused by a CHECK, for the same reason `audit_entry` refuses a row whose
+  value did not move.
+- **A worksheet with no recon lines reports zeros, not a 409** (Phase E,
+  `src/DealDesk/Api/ReconEndpoints.cs`). `GET .../recon-variance` on an
+  appraisal with no recon lines returns 200 and zeros, unlike `GET .../offer`,
+  which 409s with no anchor. An empty sum is genuinely zero; an anchor cannot
+  be invented from no comps. `unpostedLines` is what tells a reader recon is
+  unfinished, so a zero total is never mistaken for a finished one.
+- **The category rollup is ordered by category name** (Phase E,
+  `src/DealDesk/Domain/ReconVariance.cs`). Ordinal by name rather than by
+  entry order or by size, so two worksheets carrying the same categories
+  report them in the same order however their lines were typed — feature 5's
+  recon-variance report reads across worksheets and needs that stability.
 - **`HealthzTests` asserts the newest available migration** (Phase B,
   `tests/DealDesk.Tests/HealthzTests.cs`). It hardcoded `001_`, which adding
   `002_worksheet.sql` would have dated; it now compares against
