@@ -262,7 +262,7 @@ and `SeedSmokeTests.ReadAsync()`.
   seeded database (contiguous ids, two walk items each, the comp-less
   worksheet, the one credit, the trail, recent timestamps). Mirror
   `AuditSchemaTests.cs`; no HTTP. Spec: §H4.
-- [ ] H5 — Create `tests/DealDesk.Tests/SeedWorksheetApiTests.cs`: six HTTP
+- [x] H5 — Create `tests/DealDesk.Tests/SeedWorksheetApiTests.cs`: six HTTP
   assertions over a seeded worksheet (list order, status filter, worksheet 1's
   fields and children, offer inputs, the audit trail). Mirror
   `WalkItemApiTests.cs`. Spec: §H5.
