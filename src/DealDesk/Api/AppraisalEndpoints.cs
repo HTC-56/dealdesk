@@ -46,5 +46,39 @@ public static class AppraisalEndpoints
 
             return Results.Json(rows);
         });
+
+        routes.MapPost("/api/appraisals", (CreateAppraisal body, Db db) =>
+        {
+            var error = body.Validate();
+            if (error is not null)
+                return Results.BadRequest(new { error });
+
+            using var connection = db.Open();
+
+            var now = DateTimeOffset.UtcNow.ToString("O");
+
+            var id = connection.QuerySingle<long>(
+                """
+                INSERT INTO appraisal
+                    (vin, model_year, make, model, trim_level, miles, appraiser,
+                     status, created_at, updated_at)
+                VALUES
+                    ($vin, $year, $make, $model, $trim, $miles, $appraiser,
+                     'draft', $now, $now)
+                RETURNING id;
+                """,
+                new
+                {
+                    vin = body.NormalizedVin(),
+                    year = body.ModelYear,
+                    make = body.Make,
+                    model = body.Model,
+                    trim = body.TrimLevel ?? string.Empty,
+                    miles = body.Miles,
+                    appraiser = body.Appraiser,
+                });
+
+            return Results.Created($"/api/appraisals/{id}", new { id });
+        });
     }
 }

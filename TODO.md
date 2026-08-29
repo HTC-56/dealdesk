@@ -59,7 +59,7 @@ format --verify-no-changes`, `bash scripts/scrub-check.sh`.** Demo VINs:
 - [x] B8 — Add `GET /api/appraisals` (every row, newest first, optional
   `status` filter) to `src/DealDesk/Api/AppraisalEndpoints.cs`, mirroring the
   `{id:long}` handler right above it. Spec: §B8.
-- [ ] B9 — Add `POST /api/appraisals` to
+- [x] B9 — Add `POST /api/appraisals` to
   `src/DealDesk/Api/AppraisalEndpoints.cs`: `Validate()` → 400, else insert a
   draft row with `RETURNING id` → 201 + Location. Spec: §B9.
 - [ ] B10 — Create `tests/DealDesk.Tests/AppraisalApiTests.cs`: six HTTP
