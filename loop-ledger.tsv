@@ -30,3 +30,4 @@ time	lane	model	result	turns	out_tok	tools	edits	dur_s	task
 2026-08-29T14:10:01	loop	qwen	no-op	37	4115	15	2	124	- [ ] E5 — Add the actuals pair (GET + POST
 2026-08-29T14:11:57	loop	qwen	commit	68	11421	29	4	115	- [ ] E6 — Create `tests/DealDesk.Tests/ReconActualSchemaTests.cs`: six
 2026-08-29T14:14:03	loop	qwen	commit	64	14070	27	4	125	- [ ] E7 — Create `tests/DealDesk.Tests/ReconVarianceTests.cs`: six arithmetic
+2026-08-29T14:24:56	loop	qwen	commit	215	40891	86	16	651	- [ ] E8 — Create `tests/DealDesk.Tests/ReconActualApiTests.cs`: six HTTP
