@@ -71,7 +71,7 @@ and its path constants.
   the token left commented, loopback only, paths under the unit's writable
   directory, the bundle extract dir). Mirror `PackagingSmokeTests.cs`.
   Spec: §J7.
-- [ ] J8 — Create `tests/DealDesk.Tests/CiWorkflowTests.cs`: six facts about
+- [x] J8 — Create `tests/DealDesk.Tests/CiWorkflowTests.cs`: six facts about
   `.github/workflows/ci.yml` (both triggers, read-only permissions, two jobs,
   nothing installed but the SDK, the gates in order, the publish checked).
   Mirror `PackagingSmokeTests.cs`. Spec: §J8.
