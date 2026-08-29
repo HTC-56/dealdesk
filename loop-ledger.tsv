@@ -28,3 +28,4 @@ time	lane	model	result	turns	out_tok	tools	edits	dur_s	task
 2026-08-29T13:50:21	loop	qwen	commit	41	5896	16	4	250	- [ ] D10 — Run `bash verify.sh`, append a `## Phase D` section to STATUS.md,
 2026-08-29T14:07:43	plan	claude	commit	99	119578	60	11	509	plan next phase
 2026-08-29T14:10:01	loop	qwen	no-op	37	4115	15	2	124	- [ ] E5 — Add the actuals pair (GET + POST
+2026-08-29T14:11:57	loop	qwen	commit	68	11421	29	4	115	- [ ] E6 — Create `tests/DealDesk.Tests/ReconActualSchemaTests.cs`: six
