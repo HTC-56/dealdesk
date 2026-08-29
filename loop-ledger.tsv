@@ -36,3 +36,4 @@ time	lane	model	result	turns	out_tok	tools	edits	dur_s	task
 2026-08-29T15:10:15	plan	claude	commit	75	126692	47	13	649	plan next phase
 2026-08-29T15:11:52	loop	qwen	no-op	36	5860	16	1	104	- [ ] G5 — Create `tests/DealDesk.Tests/OpsMetricsTests.cs`: six laws over
 2026-08-29T15:13:45	loop	qwen	commit	81	12236	33	5	112	- [ ] G5 — Create `tests/DealDesk.Tests/OpsMetricsTests.cs`: six laws over
+2026-08-29T15:15:41	loop	qwen	commit	87	13187	33	7	115	- [ ] G6 — Create `tests/DealDesk.Tests/OpsLedgerTests.cs`: six facts over
