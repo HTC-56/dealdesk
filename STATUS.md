@@ -109,3 +109,9 @@ What is still NOT built: the desk page and deploy packaging.
 Phase I is closed. `GET /` serves the desk page — one self-contained HTML file with inline CSS and JS and zero external requests — carrying four panels: the appraisal list with its five lifecycle states, a worksheet with walk, recon, comps and store numbers whose offer derivation recomputes live as the desk types, the audit trail, and all three reports (look-to-book, recon variance, front gross). Test count is now 236.
 
 What is still NOT built: deploy packaging (single-file publish, example unit file, CI) and `docs/PROCESS.md`.
+
+## Phase J
+
+Phase J is closed. `dotnet publish -c Release -r linux-x64` yields one self-contained executable carrying its own runtime, schema, seed and desk page; `deploy/` holds an example systemd unit and the environment file it reads; `.github/workflows/ci.yml` runs the four gates and the publish on every push; `docs/PROCESS.md` tells the loop story. Test count is now 264.
+
+What is still NOT built: nothing — every SPEC.md feature is shipped, with the hero screenshot and the CI badge deferred to a human, as ROADMAP.md's reservations record.

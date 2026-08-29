@@ -13,8 +13,8 @@ are the one permitted exception to append-only docs.
 | 6 | The desk page (self-contained) | SHIPPED | I | `GET /` — self-contained page: list, worksheet with live offer math, trail, reports; hero screenshot deferred |
 | 7 | Ops surface (/healthz, /metrics, ledger, bearer auth) | SHIPPED | A, G | /metrics, the JSONL ledger and the bearer token |
 | 8 | Seeded demo data | SHIPPED | H | seed.sql, Seeder, the `seed` verb; a demo month of twelve worksheets |
-| 9 | Deploy-grade packaging (single-file publish, unit file, CI, quickstart) | PARTIAL | A, J | quickstart in A4; publish, `deploy/` and CI landed in J1–J3 — row flips at §J11 |
-| — | docs/PROCESS.md (the loop story) | NOT BUILT | J | written at §J9, now that there is a ledger to count |
+| 9 | Deploy-grade packaging (single-file publish, unit file, CI, quickstart) | SHIPPED | A, J | single-file publish, example unit and env file, CI on four gates; README quickstart from A4 |
+| — | docs/PROCESS.md (the loop story) | SHIPPED | J | the loop story, with the ledger counted rather than guessed |
 
 When every row reads SHIPPED and verify.sh is green, the project is done — the
 planning lane declares PROJECT SPEC COMPLETE rather than inventing scope.
