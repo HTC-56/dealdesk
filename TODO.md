@@ -23,7 +23,7 @@ Scaffold, migrator, Money and the first tests are already committed (`feat(A1)`,
   Money laws (subtraction undoes addition, double negation, Zero identity,
   comparisons, sub-cent rejection, empty Sum). Mirror
   `MoneyPropertyTests.cs`. Spec: §A5.
-- [ ] A6 — Create `tests/DealDesk.Tests/MoneyStorageTests.cs`: Money survives a
+- [x] A6 — Create `tests/DealDesk.Tests/MoneyStorageTests.cs`: Money survives a
   Dapper round-trip as INTEGER cents, negatives included. Mirror
   `AppraisalRoundTripTests.cs`; scratch table in the test, no new migration.
   Spec: §A6.
