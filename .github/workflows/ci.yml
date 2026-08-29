@@ -1,0 +1,73 @@
+name: CI
+
+# The same four gates verify.sh runs locally, plus a publish job that proves
+# feature 9's headline claim on every push: one self-contained file that
+# carries its own schema. A stranger with the SDK gets this result too — CI
+# needs nothing but .NET 8.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gates:
+    name: Gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore
+
+      # Gate 1 of 4. -warnaserror is the repo rule, not a CI flourish:
+      # Directory.Build.props already sets TreatWarningsAsErrors.
+      - name: Build
+        run: dotnet build -warnaserror --no-restore
+
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+
+      - name: Format
+        run: dotnet format --verify-no-changes --no-restore
+
+      # scrub-check reads `git ls-files`, so it needs the checkout's git
+      # directory — which actions/checkout leaves in place.
+      - name: Scrub check
+        run: bash scripts/scrub-check.sh
+
+  publish:
+    name: Single-file publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Publish
+        run: dotnet publish src/DealDesk/DealDesk.csproj -c Release -r linux-x64 -o out
+
+      # "Single file" has to mean it. Native libraries and debug symbols are
+      # folded in by the csproj, so anything beside the binary is a regression.
+      - name: The publish output is one file
+        run: |
+          ls -l out
+          test "$(find out -type f | wc -l)" -eq 1
+
+      # The binary carries its own migrations and its own seed script, so it
+      # can build a database with no sidecar files and nothing fetched.
+      - name: The binary carries its own schema
+        run: |
+          mkdir -p smoke
+          DEALDESK_Db__Path=smoke/dealdesk.db ./out/DealDesk seed
+          test -s smoke/dealdesk.db
