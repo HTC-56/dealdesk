@@ -270,7 +270,7 @@ and `SeedSmokeTests.ReadAsync()`.
   assertions over the per-appraiser ROWS of look-to-book and front-gross (name
   order, three rate rows, both signs of recon variance). Mirror
   `LookToBookApiTests.cs`. Spec: §H6.
-- [ ] H7 — Create `tests/DealDesk.Tests/SeedVarianceApiTests.cs`: six HTTP
+- [x] H7 — Create `tests/DealDesk.Tests/SeedVarianceApiTests.cs`: six HTTP
   assertions over `GET .../recon-variance` on seeded worksheets (totals, the
   category order, the credit, unposted lines, an empty worksheet). Mirror
   `ReconVarianceApiTests.cs`. Spec: §H7.
