@@ -35,6 +35,7 @@ app.MapAppraisalEndpoints();
 app.MapWorksheetEndpoints();
 app.MapOfferEndpoints();
 app.MapLifecycleEndpoints();
+app.MapReconEndpoints();
 
 app.Run();
 
