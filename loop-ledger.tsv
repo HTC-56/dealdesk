@@ -55,3 +55,4 @@ time	lane	model	result	turns	out_tok	tools	edits	dur_s	task
 2026-08-29T17:11:35	loop	qwen	commit	69	9223	27	7	96	- [ ] I9 — Run `bash verify.sh`, append a `## Phase I` section to STATUS.md,
 2026-08-29T17:29:13	plan	claude	commit	81	122294	46	12	706	plan next phase
 2026-08-29T17:30:55	loop	qwen	commit	33	6429	13	2	126	- [ ] J5 — Create `tests/DealDesk.Tests/PublishProfileTests.cs`: six facts
+2026-08-29T17:32:31	loop	qwen	commit	66	12407	26	4	95	- [ ] J6 — Create `tests/DealDesk.Tests/DeployUnitTests.cs`: six facts about
