@@ -31,6 +31,6 @@ Scaffold, migrator, Money and the first tests are already committed (`feat(A1)`,
   CHECK constraints in `sql/001_init.sql` reject bad status, negative miles, a
   16-char VIN and year 1800; all five statuses insert. Mirror
   `AppraisalRoundTripTests.cs`. Spec: §A7.
-- [ ] A8 — Create `verify.sh` (all four gates + README-path lint), append a
+- [x] A8 — Create `verify.sh` (all four gates + README-path lint), append a
   `## Phase A` section to STATUS.md, and flip the ROADMAP row 1 to SHIPPED.
   Closes Phase A. Gate: `bash verify.sh`. Spec: §A8.

@@ -5,7 +5,7 @@ are the one permitted exception to append-only docs.
 
 | # | Feature (SPEC.md) | Status | Phase | Note |
 |---|---|---|---|---|
-| 1 | .NET 8 minimal API + SQLite/Dapper + migrator | PARTIAL | A | scaffold, migrator, Money, 001_init shipped; A8 flips to SHIPPED |
+| 1 | .NET 8 minimal API + SQLite/Dapper + migrator | SHIPPED | A | scaffold, migrator, Money, 001_init, Phase A gates |
 | 2 | Appraisal worksheet + offer math with visible derivation | NOT BUILT | — | centerpiece; property-tested |
 | 3 | Lifecycle + append-only audit trail | NOT BUILT | — | |
 | 4 | Recon actuals + variance | NOT BUILT | — | |
