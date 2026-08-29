@@ -14,3 +14,5 @@ time	lane	model	result	turns	out_tok	tools	edits	dur_s	task
 2026-08-29T12:08:11	loop	qwen	commit	80	10044	31	4	73	- [ ] B9 — Add `POST /api/appraisals` to
 2026-08-29T12:11:32	loop	qwen	commit	109	16566	42	8	200	- [ ] B10 — Create `tests/DealDesk.Tests/AppraisalApiTests.cs`: six HTTP
 2026-08-29T12:19:01	loop	qwen	no-op	104	16034	39	9	447	- [ ] B11 — Run `bash verify.sh`, append a `## Phase B` section to STATUS.md,
+2026-08-29T12:33:13	plan	claude	commit	77	125394	49	12	570	plan next phase
+2026-08-29T12:53:41	loop	qwen	commit	163	32607	65	13	1255	- [ ] C4 — Add the recon-line pair (GET + POST
