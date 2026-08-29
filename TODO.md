@@ -62,7 +62,7 @@ and its path constants.
   the RID-conditioned group, no pinned RID, no trim, embedded symbols, both
   embedded resources, two packages). Mirror `PackagingSmokeTests.cs`.
   Spec: §J5.
-- [ ] J6 — Create `tests/DealDesk.Tests/DeployUnitTests.cs`: six facts about
+- [x] J6 — Create `tests/DealDesk.Tests/DeployUnitTests.cs`: six facts about
   `deploy/dealdesk.service` (section order, `Type=exec`, unprivileged user,
   one writable path, restart on failure, every path absolute). Mirror
   `PackagingSmokeTests.cs`. Spec: §J6.
