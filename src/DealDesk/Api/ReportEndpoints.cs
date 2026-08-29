@@ -73,5 +73,24 @@ public static class ReportEndpoints
                 Rows = rows,
             });
         });
+
+        routes.MapGet("/api/reports/front-gross", (Db db) =>
+        {
+            using var connection = db.Open();
+
+            var rows = connection.Query<FrontGrossRow>(
+                "SELECT " + FrontGrossColumns +
+                " FROM report_front_gross ORDER BY appraiser;").AsList();
+
+            return Results.Json(new FrontGrossReport
+            {
+                WonCount = rows.Sum(row => row.WonCount),
+                TotalTargetGross = rows.Sum(row => row.TargetGross),
+                TotalReconVariance = rows.Sum(row => row.ReconVariance),
+                TotalProjectedGross = rows.Sum(row => row.ProjectedGross),
+                UnpostedLines = rows.Sum(row => row.UnpostedLines),
+                Rows = rows,
+            });
+        });
     }
 }
