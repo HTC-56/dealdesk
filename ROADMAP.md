@@ -6,7 +6,7 @@ are the one permitted exception to append-only docs.
 | # | Feature (SPEC.md) | Status | Phase | Note |
 |---|---|---|---|---|
 | 1 | .NET 8 minimal API + SQLite/Dapper + migrator | SHIPPED | A | scaffold, migrator, Money, 001_init, Phase A gates |
-| 2 | Appraisal worksheet + offer math with visible derivation | PARTIAL | B | domain math + schema + appraisal create/read; child-collection and offer endpoints still open |
+| 2 | Appraisal worksheet + offer math with visible derivation | PARTIAL | B–C | domain math, schema, appraisal + walk-item + offer endpoints; recon/comp collections land in C, which flips this to SHIPPED |
 | 3 | Lifecycle + append-only audit trail | NOT BUILT | — | |
 | 4 | Recon actuals + variance | NOT BUILT | — | |
 | 5 | The three reports (look-to-book, recon variance, gross by appraiser) | NOT BUILT | — | |
@@ -56,6 +56,24 @@ planning lane declares PROJECT SPEC COMPLETE rather than inventing scope.
   `src/DealDesk/Api/AppraisalEndpoints.cs`). The static bearer token on writes
   is feature 7; `POST /api/appraisals` is open until that ships, and no other
   phase may treat that as precedent.
+- **API money fields are integer cents with no suffix** (Phase C,
+  `src/DealDesk/Api/WorksheetDtos.cs`). The wire carries `estimate`, `price`,
+  `pack`, `targetGross`, `anchorOverride`, `recommended` as whole cents, not
+  dollars: a JSON number is a double in a browser, and `1234.56` would not
+  survive the round trip the offer math exists to make exact. The API records
+  use `long` rather than `Money` for these — cents-at-the-boundary means no
+  JSON converter and no `Money`-shaped `{"cents":…}` objects in the payload.
+- **An unpriceable worksheet is 409, not 400** (Phase C,
+  `src/DealDesk/Api/OfferEndpoints.cs`). `GET .../offer` on an appraisal with
+  neither a comp nor an anchor override returns 409 Conflict: the request is
+  well-formed, the worksheet is simply not ready to price. Every other refusal
+  in the repo is a 400 from a `Validate()` message.
+- **Offer inputs upsert, and read as zeros when absent** (Phase C,
+  `src/DealDesk/Api/OfferEndpoints.cs`). `offer_input` is one row per
+  appraisal, so the write is `PUT` with `ON CONFLICT … DO UPDATE` rather than a
+  `POST` that could duplicate. A worksheet the desk has never priced reads back
+  pack 0 / target 0 rather than 404 — the appraisal exists, its store numbers
+  are just untyped.
 - **`HealthzTests` asserts the newest available migration** (Phase B,
   `tests/DealDesk.Tests/HealthzTests.cs`). It hardcoded `001_`, which adding
   `002_worksheet.sql` would have dated; it now compares against

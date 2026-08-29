@@ -68,3 +68,32 @@ format --verify-no-changes`, `bash scripts/scrub-check.sh`.** Demo VINs:
 - [x] B11 — Run `bash verify.sh`, append a `## Phase B` section to STATUS.md,
   and flip ROADMAP row 2 to PARTIAL / phase B. Closes Phase B. Gate:
   `bash verify.sh`. Spec: §B11.
+
+## Phase C: child collections and the priced offer — see TASK_PHASE_C.md
+
+Phases A and B above are CLOSED and kept only as style references. **Phase C is
+the open one.** `WorksheetDtos.cs`, `WorksheetEndpoints.cs` (the walk-item
+pair) and `OfferEndpoints.cs` are already committed (`feat(C1)`–`feat(C3)`);
+the tree is green at 64 tests. **Gate for every task: `dotnet build
+-warnaserror`, `dotnet test`, `dotnet format --verify-no-changes`, `bash
+scripts/scrub-check.sh`.** Money on the wire is whole cents; JSON is camelCase.
+
+- [ ] C4 — Add the recon-line pair (GET + POST
+  `/api/appraisals/{id}/recon-lines`) to
+  `src/DealDesk/Api/WorksheetEndpoints.cs`, mirroring the walk-item pair
+  directly above it. Spec: §C4.
+- [ ] C5 — Add the comp pair (GET + POST `/api/appraisals/{id}/comps`) to
+  `src/DealDesk/Api/WorksheetEndpoints.cs`, mirroring the recon-line pair you
+  just wrote. Spec: §C5.
+- [ ] C6 — Create `tests/DealDesk.Tests/WorksheetApiTests.cs`: six HTTP
+  assertions over recon-lines and comps (201s, two 400s, the list, a 404).
+  Mirror `WalkItemApiTests.cs`. Spec: §C6.
+- [ ] C7 — Create `tests/DealDesk.Tests/OfferApiTests.cs`: six HTTP assertions
+  over `/offer-inputs` and `/offer` that `OfferSmokeTests.cs` does not already
+  cover. Mirror `OfferSmokeTests.cs`. Spec: §C7.
+- [ ] C8 — Edit `README.md`: add one `## The API` section listing every route
+  that now exists, the cents rule, the derivation rule, and one curl example.
+  Promise nothing unbuilt. Gate: `bash verify.sh`. Spec: §C8.
+- [ ] C9 — Run `bash verify.sh`, append a `## Phase C` section to STATUS.md,
+  and flip ROADMAP row 2 to SHIPPED / phase B–C. Closes Phase C. Gate:
+  `bash verify.sh`. Spec: §C9.
