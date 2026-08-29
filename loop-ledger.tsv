@@ -9,3 +9,4 @@ time	lane	model	result	turns	out_tok	tools	edits	dur_s	task
 2026-08-29T11:53:15	plan	claude	commit	111	158763	67	17	692	plan next phase
 2026-08-29T11:55:27	loop	qwen	commit	35	5263	14	2	101	- [ ] B5 — Create `tests/DealDesk.Tests/VinTests.cs`: six VIN facts (the
 2026-08-29T11:59:19	loop	qwen	commit	93	22138	38	7	230	- [ ] B6 — Create `tests/DealDesk.Tests/OfferMathTests.cs`: six laws — the
+2026-08-29T12:05:31	loop	qwen	commit	134	46740	55	12	370	- [ ] B7 — Create `tests/DealDesk.Tests/WorksheetSchemaTests.cs`: the
