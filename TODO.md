@@ -164,10 +164,10 @@ recon LINE and its amount may be negative (a credit) but never zero.
   assertions over `GET .../recon-variance` (empty worksheet, unposted lines,
   a posted line, totals, byCategory, 404). Mirror `ReconActualApiTests.cs`.
   Spec: §E9.
-- [ ] E10 — Edit `README.md`: add the three new routes to `## The API`, one
+- [x] E10 — Edit `README.md`: add the three new routes to `## The API`, one
   recon-variance paragraph, and change the healthz sample's schema to
   `004_recon_actual`. Promise nothing unbuilt. Gate: `bash verify.sh`.
   Spec: §E10.
-- [ ] E11 — Run `bash verify.sh`, append a `## Phase E` section to STATUS.md,
+- [x] E11 — Run `bash verify.sh`, append a `## Phase E` section to STATUS.md,
   and flip ROADMAP row 4 to SHIPPED / phase E. Closes Phase E. Gate:
   `bash verify.sh`. Spec: §E11.

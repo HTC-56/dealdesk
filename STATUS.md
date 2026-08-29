@@ -60,3 +60,15 @@ PATCHable. Test count is now 100.
 What is still NOT built: recon actuals and variance, the three reports
 (look-to-book, recon variance, gross by appraiser), the desk page, the ops
 surface beyond `/healthz`, seeded demo data, and deploy packaging.
+
+## Phase E
+
+Phase E is closed. Recon actuals now post line-by-line against a recon estimate
+line — many postings per line, a negative amount is a credit, zero is refused.
+`GET .../recon-variance` serves `actual − estimate` per line, by category, and
+for the worksheet, with `unpostedLines` flagging unfinished recon. Test count is
+now 124.
+
+What is still NOT built: the three reports (look-to-book, recon variance, gross
+by appraiser), the desk page, the ops surface beyond `/healthz`, seeded demo
+data, and deploy packaging.
