@@ -274,9 +274,9 @@ and `SeedSmokeTests.ReadAsync()`.
   assertions over `GET .../recon-variance` on seeded worksheets (totals, the
   category order, the credit, unposted lines, an empty worksheet). Mirror
   `ReconVarianceApiTests.cs`. Spec: §H7.
-- [ ] H8 — Edit `README.md`: add the seed command to the quickstart block and
+- [x] H8 — Edit `README.md`: add the seed command to the quickstart block and
   one demo-data paragraph after the ops paragraph. The healthz sample stays
   `005_reports` — no migration this phase. Gate: `bash verify.sh`. Spec: §H8.
-- [ ] H9 — Run `bash verify.sh`, append a `## Phase H` section to STATUS.md,
+- [x] H9 — Run `bash verify.sh`, append a `## Phase H` section to STATUS.md,
   and flip ROADMAP row 8 to SHIPPED / phase H. Closes Phase H. Gate:
   `bash verify.sh`. Spec: §H9.
