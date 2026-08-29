@@ -44,3 +44,4 @@ time	lane	model	result	turns	out_tok	tools	edits	dur_s	task
 2026-08-29T15:42:55	plan	claude	commit	102	179406	65	11	759	plan next phase
 2026-08-29T15:52:05	loop	qwen	commit	63	20484	23	4	591	- [ ] H4 — Create `tests/DealDesk.Tests/SeedDataTests.cs`: six facts over the
 2026-08-29T15:58:35	loop	qwen	commit	99	27745	38	6	388	- [ ] H5 — Create `tests/DealDesk.Tests/SeedWorksheetApiTests.cs`: six HTTP
+2026-08-29T16:16:58	loop	qwen	commit	121	36826	50	8	1101	- [ ] H6 — Create `tests/DealDesk.Tests/SeedReportApiTests.cs`: six HTTP
