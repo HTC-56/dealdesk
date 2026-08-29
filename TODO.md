@@ -116,7 +116,7 @@ illegal move = 409. Every write needs `changedBy` and `reason`.
 - [x] D5 — Create `tests/DealDesk.Tests/LifecycleTests.cs`: six rule assertions
   over `Domain/Lifecycle.cs` (forward chain, no skipping, lost from anywhere,
   terminals, case-insensitivity, Refuse). Mirror `VinTests.cs`. Spec: §D5.
-- [ ] D6 — Create `tests/DealDesk.Tests/AuditSchemaTests.cs`: six assertions
+- [x] D6 — Create `tests/DealDesk.Tests/AuditSchemaTests.cs`: six assertions
   over `sql/003_audit.sql` — good row inserts, three CHECKs reject, UPDATE and
   DELETE abort, parent delete blocked. Mirror `WorksheetSchemaTests.cs`.
   Spec: §D6.
