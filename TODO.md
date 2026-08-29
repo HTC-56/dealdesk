@@ -243,3 +243,40 @@ response reaches the caller, so use `OpsSmokeTests.ScrapeUntilAsync` and
 - [x] G10 — Run `bash verify.sh`, append a `## Phase G` section to STATUS.md,
   and flip ROADMAP row 7 to SHIPPED / phase A, G. Closes Phase G. Gate:
   `bash verify.sh`. Spec: §G10.
+
+## Phase H: seeded demo data — see TASK_PHASE_H.md
+
+Phases A–G above are CLOSED and kept only as style references. **Phase H is the
+open one.** `sql/seed.sql`, `Data/Seeder.cs`, the `seed` verb in `Program.cs`
+and `tests/SeedSmokeTests.cs` are already committed (`feat(H1)`–`feat(H3)`);
+the tree is green at 184 tests. **Gate for every task: `dotnet build
+-warnaserror`, `dotnet test`, `dotnet format --verify-no-changes`, `bash
+scripts/scrub-check.sh`.** You add no `src/` code this phase. The demo month is
+twelve worksheets (ids 1..12) across three appraisers — 4 won, 2 lost, 2
+presented, 2 appraised, 2 draft — with 15 recon lines, 6 of them unposted.
+Every number a task asserts is listed in TASK_PHASE_H.md's "The demo month, in
+numbers". Reuse `SeedSmokeTests.SeededDb()`, `SeedSmokeTests.SeededClient()`
+and `SeedSmokeTests.ReadAsync()`.
+
+- [ ] H4 — Create `tests/DealDesk.Tests/SeedDataTests.cs`: six facts over the
+  seeded database (contiguous ids, two walk items each, the comp-less
+  worksheet, the one credit, the trail, recent timestamps). Mirror
+  `AuditSchemaTests.cs`; no HTTP. Spec: §H4.
+- [ ] H5 — Create `tests/DealDesk.Tests/SeedWorksheetApiTests.cs`: six HTTP
+  assertions over a seeded worksheet (list order, status filter, worksheet 1's
+  fields and children, offer inputs, the audit trail). Mirror
+  `WalkItemApiTests.cs`. Spec: §H5.
+- [ ] H6 — Create `tests/DealDesk.Tests/SeedReportApiTests.cs`: six HTTP
+  assertions over the per-appraiser ROWS of look-to-book and front-gross (name
+  order, three rate rows, both signs of recon variance). Mirror
+  `LookToBookApiTests.cs`. Spec: §H6.
+- [ ] H7 — Create `tests/DealDesk.Tests/SeedVarianceApiTests.cs`: six HTTP
+  assertions over `GET .../recon-variance` on seeded worksheets (totals, the
+  category order, the credit, unposted lines, an empty worksheet). Mirror
+  `ReconVarianceApiTests.cs`. Spec: §H7.
+- [ ] H8 — Edit `README.md`: add the seed command to the quickstart block and
+  one demo-data paragraph after the ops paragraph. The healthz sample stays
+  `005_reports` — no migration this phase. Gate: `bash verify.sh`. Spec: §H8.
+- [ ] H9 — Run `bash verify.sh`, append a `## Phase H` section to STATUS.md,
+  and flip ROADMAP row 8 to SHIPPED / phase H. Closes Phase H. Gate:
+  `bash verify.sh`. Spec: §H9.

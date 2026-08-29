@@ -12,7 +12,7 @@ are the one permitted exception to append-only docs.
 | 5 | The three reports (look-to-book, recon variance, gross by appraiser) | SHIPPED | F | all three routes with per-appraiser/category rollup, basis-point rates, store totals from rows |
 | 6 | The desk page (self-contained) | NOT BUILT | — | hero screenshot |
 | 7 | Ops surface (/healthz, /metrics, ledger, bearer auth) | SHIPPED | A, G | /metrics, the JSONL ledger and the bearer token |
-| 8 | Seeded demo data | NOT BUILT | — | |
+| 8 | Seeded demo data | PARTIAL | H | seed.sql, Seeder, the `seed` verb; §H4–§H9 gate and document it |
 | 9 | Deploy-grade packaging (single-file publish, unit file, CI, quickstart) | PARTIAL | A | README quickstart in A4; publish, unit file, CI still open |
 | — | docs/PROCESS.md (the loop story) | NOT BUILT | — | written near the end, when there is a ledger to excerpt |
 
@@ -201,6 +201,36 @@ planning lane declares PROJECT SPEC COMPLETE rather than inventing scope.
   as a failed scrape rather than a store that sold nothing. `COUNT(*) AS
   count` is the one aliased column in the repo; every other query selects real
   column names.
+- **The seed is embedded beside the migrations but is not one** (Phase H,
+  `src/DealDesk/Data/Seeder.cs`). SPEC.md says "a seed script"; the csproj
+  already embeds `sql/*.sql`, so `seed.sql` ships inside the assembly for the
+  single-file publish exactly as the schema does — but `Migrator`'s name
+  pattern only matches `NNN_*.sql`, so nothing applies it automatically. A
+  migration must run on every database, including a real one; demo data must
+  run on none of them unless somebody asks. Asking is
+  `dotnet run --project src/DealDesk -- seed`.
+- **Seeding is refused, not repeated** (Phase H, `src/DealDesk/Data/Seeder.cs`).
+  SPEC.md does not say what a second run does. Taken as: a non-empty
+  `appraisal` table means the seed writes nothing and returns 0. Two demo
+  months on top of each other would make every report read as a store that did
+  twice the business it did, and "already seeded" is the ordinary state of a
+  database somebody has demoed — not an error worth throwing over.
+- **Seeded ids are explicit, 1..12 and 1..15** (Phase H, `sql/seed.sql`).
+  Because the script only ever runs into an empty table, the worksheets and
+  recon lines carry literal ids. That is what lets the README quickstart name a
+  worksheet, the desk page link one, and a test assert against one without
+  first querying for its id.
+- **The demo month is relative to the moment it is seeded** (Phase H,
+  `sql/seed.sql`). Timestamps are `strftime` offsets from `now`, not fixed
+  dates, so a demo run in any month reads as "this month" rather than as a
+  fixed month receding into the past. The cost is that no test may assert an
+  exact timestamp; §H4 asserts the window instead.
+- **The `seed` verb is handled before the host builder** (Phase H,
+  `src/DealDesk/Program.cs`). `WebApplication.CreateBuilder(args)` adds
+  command-line configuration, which understands only `--switch value` pairs and
+  refuses a bare verb. So the branch reads its database path from the
+  environment through its own `ConfigurationBuilder` and returns before the
+  host exists — which also means the seed never opens a port.
 - **`HealthzTests` asserts the newest available migration** (Phase B,
   `tests/DealDesk.Tests/HealthzTests.cs`). It hardcoded `001_`, which adding
   `002_worksheet.sql` would have dated; it now compares against
