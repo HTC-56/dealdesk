@@ -234,7 +234,7 @@ response reaches the caller, so use `OpsSmokeTests.ScrapeUntilAsync` and
   assertions over `GET /metrics` (content type, a 404 counted, a POST counted,
   the gauge moving, the duration family, no token needed). Mirror
   `OpsSmokeTests.cs`. Spec: §G7.
-- [ ] G8 — Create `tests/DealDesk.Tests/BearerAuthApiTests.cs`: six HTTP
+- [x] G8 — Create `tests/DealDesk.Tests/BearerAuthApiTests.cs`: six HTTP
   assertions over the token (401 without, 401 wrong, PUT guarded, reads open,
   near miss, unset token open). Mirror `OpsSmokeTests.cs`. Spec: §G8.
 - [ ] G9 — Edit `README.md`: add `GET /metrics` to `## The API` and one ops
