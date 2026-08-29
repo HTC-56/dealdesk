@@ -157,7 +157,7 @@ recon LINE and its amount may be negative (a credit) but never zero.
   laws over `Domain/ReconVariance.cs` (line totals, credits, unposted lines,
   worksheet totals, category rollup, refusals). Mirror `LifecycleTests.cs`;
   no database. Spec: §E7.
-- [ ] E8 — Create `tests/DealDesk.Tests/ReconActualApiTests.cs`: six HTTP
+- [x] E8 — Create `tests/DealDesk.Tests/ReconActualApiTests.cs`: six HTTP
   assertions over the actuals pair (201, list order, two 400s, a credit, two
   404s). Mirror `WalkItemApiTests.cs`. Spec: §E8.
 - [ ] E9 — Create `tests/DealDesk.Tests/ReconVarianceApiTests.cs`: six HTTP
