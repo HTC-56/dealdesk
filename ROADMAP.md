@@ -12,7 +12,7 @@ are the one permitted exception to append-only docs.
 | 5 | The three reports (look-to-book, recon variance, gross by appraiser) | SHIPPED | F | all three routes with per-appraiser/category rollup, basis-point rates, store totals from rows |
 | 6 | The desk page (self-contained) | NOT BUILT | — | hero screenshot |
 | 7 | Ops surface (/healthz, /metrics, ledger, bearer auth) | SHIPPED | A, G | /metrics, the JSONL ledger and the bearer token |
-| 8 | Seeded demo data | PARTIAL | H | seed.sql, Seeder, the `seed` verb; §H4–§H9 gate and document it |
+| 8 | Seeded demo data | SHIPPED | H | seed.sql, Seeder, the `seed` verb; a demo month of twelve worksheets |
 | 9 | Deploy-grade packaging (single-file publish, unit file, CI, quickstart) | PARTIAL | A | README quickstart in A4; publish, unit file, CI still open |
 | — | docs/PROCESS.md (the loop story) | NOT BUILT | — | written near the end, when there is a ledger to excerpt |
 

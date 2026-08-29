@@ -97,3 +97,9 @@ set, while reads stay open; an unset token leaves writes open so a fresh clone
 still runs its quickstart. Test count is now 180.
 
 What is still NOT built: the desk page, seeded demo data, and deploy packaging.
+
+## Phase H
+
+Phase H is closed. `dotnet run --project src/DealDesk -- seed` writes a demo month of twelve worksheets across three appraisers, covering all five lifecycle states, with recon lines in every category, postings including one credit, and six lines still unposted, so all three reports read real numbers on a fresh clone; the seed refuses to run into a database that already holds worksheets. Test count is now 208.
+
+What is still NOT built: the desk page and deploy packaging.

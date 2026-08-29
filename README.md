@@ -20,6 +20,7 @@ No database server — SQLite is a file.
 ```bash
 dotnet build
 dotnet test
+dotnet run --project src/DealDesk -- seed
 dotnet run --project src/DealDesk
 ```
 
@@ -77,6 +78,8 @@ is a 409.
 **Three reports summarise the store.** Report routes are `GET /api/reports/...`, take no id and never 404 — an empty store is an empty report. `GET .../look-to-book` groups by appraiser, counting worksheets seen, appraised, bought and lost, with the booking rate in basis points (`2500` is 25.00%). `GET .../recon-variance` rolls every worksheet's recon lines into category rows with totals. `GET .../front-gross` counts won worksheets, subtracts recon overage from the planned gross, and flags unposted lines. Rates travel as basis points; money as whole cents.
 
 **The ops surface is three things.** `GET /metrics` serves hand-rolled Prometheus text — request counters labelled by method and status, and a `dealdesk_appraisals` gauge counting worksheets by lifecycle status. Every request also appends one JSON line to the ops ledger (`ledger.jsonl` by default, moved with `DEALDESK_Ops__LedgerPath`), which keeps the request path the metric labels deliberately leave out. Setting `DEALDESK_Auth__Token` arms a static bearer token on writes: POST, PUT, PATCH and DELETE then need an `Authorization: Bearer` header and answer 401 without one, while reads, `/healthz` and `/metrics` stay open. Leave it unset and writes are open, as the quickstart above runs them.
+
+`dotnet run --project src/DealDesk -- seed` writes a demo month — twelve worksheets across three invented appraisers, covering all five lifecycle states, with fifteen recon lines across every category, some posted against and some not, so the reports show real numbers on first run. Every name, VIN and price is invented, and dealdesk never looks a VIN up anywhere. The seed refuses to run a second time: a database that already holds worksheets is left exactly as it is, so nobody can write two demo months over each other.
 
 ```bash
 curl http://localhost:5000/api/appraisals/1/offer
