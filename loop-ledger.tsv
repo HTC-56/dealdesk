@@ -39,3 +39,4 @@ time	lane	model	result	turns	out_tok	tools	edits	dur_s	task
 2026-08-29T15:15:41	loop	qwen	commit	87	13187	33	7	115	- [ ] G6 — Create `tests/DealDesk.Tests/OpsLedgerTests.cs`: six facts over
 2026-08-29T15:18:23	loop	qwen	commit	76	13638	30	5	160	- [ ] G7 — Create `tests/DealDesk.Tests/MetricsApiTests.cs`: six HTTP
 2026-08-29T15:21:29	loop	qwen	commit	76	9843	29	3	179	- [ ] G8 — Create `tests/DealDesk.Tests/BearerAuthApiTests.cs`: six HTTP
+2026-08-29T15:24:07	loop	qwen	commit	132	18845	49	7	155	- [ ] G9 — Edit `README.md`: add `GET /metrics` to `## The API` and one ops
