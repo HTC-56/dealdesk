@@ -153,7 +153,7 @@ recon LINE and its amount may be negative (a credit) but never zero.
   assertions over `sql/004_recon_actual.sql` — good row inserts, three CHECKs
   reject, a credit is allowed, postings cascade with their line. Mirror
   `AuditSchemaTests.cs`. Spec: §E6.
-- [ ] E7 — Create `tests/DealDesk.Tests/ReconVarianceTests.cs`: six arithmetic
+- [x] E7 — Create `tests/DealDesk.Tests/ReconVarianceTests.cs`: six arithmetic
   laws over `Domain/ReconVariance.cs` (line totals, credits, unposted lines,
   worksheet totals, category rollup, refusals). Mirror `LifecycleTests.cs`;
   no database. Spec: §E7.
