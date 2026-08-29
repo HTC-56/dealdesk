@@ -298,7 +298,7 @@ this phase and you never edit `index.html`. The page is served at `/` as
   the root route (content type, two identical GETs, three 404s, open under the
   token, counted in `/metrics`, not truncated). Mirror `MetricsApiTests.cs`.
   Spec: §I4.
-- [ ] I5 — Create `tests/DealDesk.Tests/DeskPageSelfContainedTests.cs`: six
+- [x] I5 — Create `tests/DealDesk.Tests/DeskPageSelfContainedTests.cs`: six
   `DoesNotContain` facts pinning zero external requests (no `://`, no script
   src, no link/@import, no font/img, one inline block of each, inline
   behaviour). Mirror `DeskPageSmokeTests.cs`. Spec: §I5.
