@@ -44,7 +44,7 @@ already committed (`feat(B1)`–`feat(B4)`); the tree is green at 28 tests.
 format --verify-no-changes`, `bash scripts/scrub-check.sh`.** Demo VINs:
 `ZZ9ZZ99Z2Z9000042` is valid, `ZZ9ZZ99Z9Z9000042` is not. Use seeds 2001+.
 
-- [ ] B5 — Create `tests/DealDesk.Tests/VinTests.cs`: six VIN facts (the
+- [x] B5 — Create `tests/DealDesk.Tests/VinTests.cs`: six VIN facts (the
   valid/invalid pair, lowercase, bad lengths + null, I/O/Q, CheckDigit and
   WithCheckDigit, Normalize throws). Mirror `MoneyArithmeticTests.cs`.
   Spec: §B5.
