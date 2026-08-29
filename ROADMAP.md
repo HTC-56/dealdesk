@@ -13,8 +13,8 @@ are the one permitted exception to append-only docs.
 | 6 | The desk page (self-contained) | SHIPPED | I | `GET /` — self-contained page: list, worksheet with live offer math, trail, reports; hero screenshot deferred |
 | 7 | Ops surface (/healthz, /metrics, ledger, bearer auth) | SHIPPED | A, G | /metrics, the JSONL ledger and the bearer token |
 | 8 | Seeded demo data | SHIPPED | H | seed.sql, Seeder, the `seed` verb; a demo month of twelve worksheets |
-| 9 | Deploy-grade packaging (single-file publish, unit file, CI, quickstart) | PARTIAL | A | README quickstart in A4; publish, unit file, CI still open |
-| — | docs/PROCESS.md (the loop story) | NOT BUILT | — | written near the end, when there is a ledger to excerpt |
+| 9 | Deploy-grade packaging (single-file publish, unit file, CI, quickstart) | PARTIAL | A, J | quickstart in A4; publish, `deploy/` and CI landed in J1–J3 — row flips at §J11 |
+| — | docs/PROCESS.md (the loop story) | NOT BUILT | J | written at §J9, now that there is a ledger to count |
 
 When every row reads SHIPPED and verify.sh is green, the project is done — the
 planning lane declares PROJECT SPEC COMPLETE rather than inventing scope.
@@ -253,6 +253,54 @@ planning lane declares PROJECT SPEC COMPLETE rather than inventing scope.
   would be an image nobody in this lane could verify was of this page. §I8
   tells a reader to open `/` instead, and the binary is left for a human with
   a browser. This is the one part of feature 6 the loop did not ship.
+- **The single-file publish is not trimmed** (Phase J,
+  `src/DealDesk/DealDesk.csproj`). SPEC.md feature 9 asks for a single-file
+  self-contained binary and says nothing about size. `PublishTrimmed` is
+  explicitly `false`: Dapper materialises rows by reflection and the minimal
+  API binds the DTO records the same way, so a trimmed publish would build
+  clean, pass every gate, and fail at the first query — the worst failure mode
+  available. The cost is a 47 MB executable, paid once at deploy time.
+  `EnableCompressionInSingleFile` takes it there from 93 MB.
+- **No runtime identifier is pinned; the operator names the platform** (Phase
+  J, `src/DealDesk/DealDesk.csproj`). Every publish property sits in a
+  PropertyGroup conditioned on `'$(RuntimeIdentifier)' != ''`, so
+  `dotnet build`, `dotnet test` and `dotnet format` never build RID-specific
+  and the three local gates are untouched by any of it. A pinned RID would
+  have made the repo's gates platform-flavoured to serve one deployment.
+  Verified end to end on arm64 — the published file seeds the demo month,
+  migrates to `005_reports`, and serves `/healthz`, `/`, the offer derivation,
+  all three reports and `/metrics`; the linux-x64 publish cross-compiles from
+  the same command and CI is what runs it.
+- **The example unit is `Type=exec`, never `notify`** (Phase J,
+  `deploy/dealdesk.service`). dealdesk is a plain Kestrel host and does not
+  signal readiness to systemd; a `notify` unit would sit there until it timed
+  out. Signalling properly would mean taking
+  `Microsoft.Extensions.Hosting.Systemd`, which SPEC.md's pre-registered
+  dependency list does not name, and a deploy example is not worth widening
+  the dependency surface for. The unit is told the truth instead.
+- **The environment example arms nothing** (Phase J,
+  `deploy/dealdesk.env.example`). `DEALDESK_Auth__Token` ships commented out
+  rather than carrying a placeholder value: Phase G already recorded that an
+  unset token leaves writes open so a fresh clone runs the README quickstart
+  with no configuration step, and a shipped placeholder is a credential
+  somebody forgets to change. Every other key in the file is set, and the
+  smoke test asserts each one is a key `Program.cs` actually reads — an
+  example that configures something the app ignores would be worse than no
+  example.
+- **The single file unpacks into the state directory, not /tmp** (Phase J,
+  `deploy/dealdesk.env.example`). `IncludeNativeLibrariesForSelfExtract` means
+  the host extracts the SQLite native library at first run;
+  `DOTNET_BUNDLE_EXTRACT_BASE_DIR` points that at `/var/lib/dealdesk/bundle`,
+  the one path the unit's `ReadWritePaths` allows. Left at its default it
+  lands under a temporary directory that `PrivateTmp=true` makes per-boot, so
+  every restart would re-extract 47 MB.
+- **NULL RESULT — no CI badge is added to the README** (Phase J). SPEC.md's
+  "done means" ends "CI badge green", and `.github/workflows/ci.yml` ships. A
+  badge URL names the published repository, and flipping this repo public
+  (with its name and its licence) is human-gated in DECISIONS.md. The workflow
+  is committed and will run on the first push to a remote; the badge line is
+  left for the human who names the repo. This is the second and last part of
+  the spec the loop did not ship, after the hero screenshot.
 - **`HealthzTests` asserts the newest available migration** (Phase B,
   `tests/DealDesk.Tests/HealthzTests.cs`). It hardcoded `001_`, which adding
   `002_worksheet.sql` would have dated; it now compares against
