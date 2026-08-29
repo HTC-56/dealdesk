@@ -145,7 +145,7 @@ open one.** `sql/004_recon_actual.sql`, `Domain/ReconVariance.cs`,
 `actual − estimate`, so positive means the line ran over. A posting hangs off a
 recon LINE and its amount may be negative (a credit) but never zero.
 
-- [ ] E5 — Add the actuals pair (GET + POST
+- [x] E5 — Add the actuals pair (GET + POST
   `/api/appraisals/{id}/recon-lines/{lineId}/actuals`) to
   `src/DealDesk/Api/ReconEndpoints.cs`, mirroring the recon-line pair in
   `WorksheetEndpoints.cs`. `ReconLineBelongs` already exists. Spec: §E5.

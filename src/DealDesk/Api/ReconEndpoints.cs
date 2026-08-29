@@ -102,6 +102,62 @@ public static class ReconEndpoints
                 }).ToList(),
             });
         });
+
+        // Actuals collection — GET + POST
+        routes.MapGet("/api/appraisals/{id:long}/recon-lines/{lineId:long}/actuals",
+            (Db db, long id, long lineId) =>
+            {
+                using var connection = db.Open();
+
+                if (!ReconLineBelongs(connection, id, lineId))
+                {
+                    return Results.NotFound();
+                }
+
+                var rows = connection.Query<ReconActualView>(
+                    "SELECT " + ReconActualColumns +
+                    " FROM recon_actual WHERE recon_line_id = $lineId" +
+                    " ORDER BY id;",
+                    new { lineId });
+
+                return Results.Json(rows);
+            });
+
+        routes.MapPost("/api/appraisals/{id:long}/recon-lines/{lineId:long}/actuals",
+            (Db db, long id, long lineId, PostReconActual body) =>
+            {
+                var error = body.Validate();
+                if (error is not null)
+                {
+                    return Results.BadRequest(new { error });
+                }
+
+                using var connection = db.Open();
+
+                if (!ReconLineBelongs(connection, id, lineId))
+                {
+                    return Results.NotFound();
+                }
+
+                var row = connection.QuerySingle<ReconActualView>(
+                    """
+                    INSERT INTO recon_actual (recon_line_id, amount, description,
+                                              posted_by, posted_at)
+                    VALUES ($lineId, $amount, $description, $postedBy, $now)
+                    RETURNING id, recon_line_id, amount, description, posted_by, posted_at;
+                    """,
+                    new
+                    {
+                        lineId,
+                        amount = body.Amount,
+                        description = body.Description,
+                        postedBy = body.PostedBy,
+                        now = WorksheetEndpoints.Timestamp(),
+                    });
+
+                return Results.Created(
+                    $"/api/appraisals/{id}/recon-lines/{lineId}/actuals/{row.Id}", row);
+            });
     }
 
     /// Whether that recon line exists AND hangs off that appraisal. The
