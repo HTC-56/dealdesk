@@ -52,7 +52,7 @@ format --verify-no-changes`, `bash scripts/scrub-check.sh`.** Demo VINs:
   derivation sums exactly, running totals, ≤ anchor − recon, four lines, anchor
   rounding, refusals. Mirror `MoneyPropertyTests.cs`; wrap `Gen` values in
   `Math.Abs`. Spec: §B6.
-- [ ] B7 — Create `tests/DealDesk.Tests/WorksheetSchemaTests.cs`: the
+- [x] B7 — Create `tests/DealDesk.Tests/WorksheetSchemaTests.cs`: the
   `sql/002_worksheet.sql` CHECK constraints on recon_line, comp, walk_item and
   offer_input, plus cascade delete. Mirror `AppraisalConstraintTests.cs`.
   Spec: §B7.
