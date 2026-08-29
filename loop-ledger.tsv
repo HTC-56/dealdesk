@@ -11,3 +11,4 @@ time	lane	model	result	turns	out_tok	tools	edits	dur_s	task
 2026-08-29T11:59:19	loop	qwen	commit	93	22138	38	7	230	- [ ] B6 — Create `tests/DealDesk.Tests/OfferMathTests.cs`: six laws — the
 2026-08-29T12:05:31	loop	qwen	commit	134	46740	55	12	370	- [ ] B7 — Create `tests/DealDesk.Tests/WorksheetSchemaTests.cs`: the
 2026-08-29T12:06:57	loop	qwen	commit	118	34945	46	9	84	- [ ] B8 — Add `GET /api/appraisals` (every row, newest first, optional
+2026-08-29T12:08:11	loop	qwen	commit	80	10044	31	4	73	- [ ] B9 — Add `POST /api/appraisals` to
