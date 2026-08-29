@@ -91,7 +91,7 @@ scripts/scrub-check.sh`.** Money on the wire is whole cents; JSON is camelCase.
 - [ ] C7 — Create `tests/DealDesk.Tests/OfferApiTests.cs`: six HTTP assertions
   over `/offer-inputs` and `/offer` that `OfferSmokeTests.cs` does not already
   cover. Mirror `OfferSmokeTests.cs`. Spec: §C7.
-- [ ] C8 — Edit `README.md`: add one `## The API` section listing every route
+- [x] C8 — Edit `README.md`: add one `## The API` section listing every route
   that now exists, the cents rule, the derivation rule, and one curl example.
   Promise nothing unbuilt. Gate: `bash verify.sh`. Spec: §C8.
 - [ ] C9 — Run `bash verify.sh`, append a `## Phase C` section to STATUS.md,
