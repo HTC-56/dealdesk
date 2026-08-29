@@ -27,7 +27,7 @@ The service answers on `http://localhost:5000/healthz`:
 
 ```bash
 curl http://localhost:5000/healthz
-# {"status":"ok","schema":"002_worksheet"}
+# {"status":"ok","schema":"003_audit"}
 ```
 
 ## The API
@@ -45,6 +45,9 @@ curl http://localhost:5000/healthz
 - `GET /api/appraisals/{id}/offer-inputs` — store numbers (pack, targetGross) plus optional anchorOverride
 - `PUT /api/appraisals/{id}/offer-inputs` — upsert the store numbers
 - `GET /api/appraisals/{id}/offer` — recommended trade value with its derivation
+- `POST /api/appraisals/{id}/status` — move the worksheet through its lifecycle
+- `PATCH /api/appraisals/{id}` — revise worksheet fields, audited
+- `GET /api/appraisals/{id}/audit` — the change trail, newest first
 
 **Money is whole cents.** Every money field on the wire — `estimate`, `price`,
 `pack`, `targetGross`, `anchorOverride`, `recommended` — is an integer number
@@ -54,6 +57,13 @@ of cents. `1550000` is $15,500.00.
 together with a `derivation` array of `{label, amount, runningTotal}`; the
 amounts sum to `recommended`. A worksheet with no comps and no anchor
 override returns 409.
+
+**Every change is audited.** `POST .../status` and `PATCH` require `changedBy`
+and `reason`, and append one `audit_entry` row per changed field recording who,
+when, old and new. The table is append-only — UPDATE and DELETE against it are
+refused by the database. The lifecycle is draft → appraised → presented → won |
+lost; `lost` is reachable from any open state, and a move the lifecycle refuses
+is a 409.
 
 ```bash
 curl http://localhost:5000/api/appraisals/1/offer
