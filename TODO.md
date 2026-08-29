@@ -13,7 +13,7 @@ Scaffold, migrator, Money and the first tests are already committed (`feat(A1)`,
 -warnaserror`, `dotnet test`, `dotnet format --verify-no-changes`, and
 `bash scripts/scrub-check.sh` once §A3 has created it.**
 
-- [ ] A3 — Create `scripts/scrub-check.sh`: scan `git ls-files` output for home
+- [x] A3 — Create `scripts/scrub-check.sh`: scan `git ls-files` output for home
   paths, non-documentation IPs, `.local`/`.internal` hosts and key material;
   exit 1 listing offences. It must exclude itself. Spec: §A3.
 - [ ] A4 — Create `README.md`: what dealdesk is, requirements, quickstart
