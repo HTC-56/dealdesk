@@ -75,7 +75,7 @@ and its path constants.
   `.github/workflows/ci.yml` (both triggers, read-only permissions, two jobs,
   nothing installed but the SDK, the gates in order, the publish checked).
   Mirror `PackagingSmokeTests.cs`. Spec: §J8.
-- [ ] J9 — Create `docs/PROCESS.md`: the loop story in one page — the two
+- [x] J9 — Create `docs/PROCESS.md`: the loop story in one page — the two
   lanes, the shape of a phase, the ledger counted with the command in the
   spec, what went wrong, what was deferred. Name no vendor and no model.
   Gate: `bash verify.sh`. Spec: §J9.

@@ -58,3 +58,4 @@ time	lane	model	result	turns	out_tok	tools	edits	dur_s	task
 2026-08-29T17:32:31	loop	qwen	commit	66	12407	26	4	95	- [ ] J6 — Create `tests/DealDesk.Tests/DeployUnitTests.cs`: six facts about
 2026-08-29T17:34:40	loop	qwen	commit	79	14828	31	6	127	- [ ] J7 — Create `tests/DealDesk.Tests/DeployEnvTests.cs`: six facts about
 2026-08-29T17:36:33	loop	qwen	commit	82	14984	31	7	111	- [ ] J8 — Create `tests/DealDesk.Tests/CiWorkflowTests.cs`: six facts about
+2026-08-29T17:39:04	loop	qwen	no-op	76	13719	31	5	149	- [ ] J9 — Create `docs/PROCESS.md`: the loop story in one page — the two
