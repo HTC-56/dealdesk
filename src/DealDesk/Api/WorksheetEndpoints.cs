@@ -28,6 +28,9 @@ public static class WorksheetEndpoints
     private const string WalkItemColumns =
         "id, appraisal_id, area, severity, note, created_at";
 
+    private const string ReconLineColumns =
+        "id, appraisal_id, category, description, estimate, created_at";
+
     public static void MapWorksheetEndpoints(this IEndpointRouteBuilder routes)
     {
         ArgumentNullException.ThrowIfNull(routes);
@@ -82,6 +85,57 @@ public static class WorksheetEndpoints
                 });
 
             return Results.Created($"/api/appraisals/{id}/walk-items/{row.Id}", row);
+        });
+
+        // Recon-line collection — GET + POST
+        routes.MapGet("/api/appraisals/{id:long}/recon-lines", (Db db, long id) =>
+        {
+            using var connection = db.Open();
+
+            if (!AppraisalExists(connection, id))
+            {
+                return Results.NotFound();
+            }
+
+            var rows = connection.Query<ReconLineView>(
+                "SELECT " + ReconLineColumns +
+                " FROM recon_line WHERE appraisal_id = $id ORDER BY id;",
+                new { id });
+
+            return Results.Json(rows);
+        });
+
+        routes.MapPost("/api/appraisals/{id:long}/recon-lines", (Db db, long id, CreateReconLine body) =>
+        {
+            var error = body.Validate();
+            if (error is not null)
+            {
+                return Results.BadRequest(new { error });
+            }
+
+            using var connection = db.Open();
+
+            if (!AppraisalExists(connection, id))
+            {
+                return Results.NotFound();
+            }
+
+            var row = connection.QuerySingle<ReconLineView>(
+                """
+                INSERT INTO recon_line (appraisal_id, category, description, estimate, created_at)
+                VALUES ($id, $category, $description, $estimate, $now)
+                RETURNING id, appraisal_id, category, description, estimate, created_at;
+                """,
+                new
+                {
+                    id,
+                    category = body.CanonicalCategory(),
+                    description = body.Description,
+                    estimate = body.Estimate,
+                    now = Timestamp(),
+                });
+
+            return Results.Created($"/api/appraisals/{id}/recon-lines/{row.Id}", row);
         });
     }
 

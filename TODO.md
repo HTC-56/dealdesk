@@ -78,7 +78,7 @@ the tree is green at 64 tests. **Gate for every task: `dotnet build
 -warnaserror`, `dotnet test`, `dotnet format --verify-no-changes`, `bash
 scripts/scrub-check.sh`.** Money on the wire is whole cents; JSON is camelCase.
 
-- [ ] C4 — Add the recon-line pair (GET + POST
+- [x] C4 — Add the recon-line pair (GET + POST
   `/api/appraisals/{id}/recon-lines`) to
   `src/DealDesk/Api/WorksheetEndpoints.cs`, mirroring the walk-item pair
   directly above it. Spec: §C4.
