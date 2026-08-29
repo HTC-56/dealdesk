@@ -48,7 +48,7 @@ format --verify-no-changes`, `bash scripts/scrub-check.sh`.** Demo VINs:
   valid/invalid pair, lowercase, bad lengths + null, I/O/Q, CheckDigit and
   WithCheckDigit, Normalize throws). Mirror `MoneyArithmeticTests.cs`.
   Spec: §B5.
-- [ ] B6 — Create `tests/DealDesk.Tests/OfferMathTests.cs`: six laws — the
+- [x] B6 — Create `tests/DealDesk.Tests/OfferMathTests.cs`: six laws — the
   derivation sums exactly, running totals, ≤ anchor − recon, four lines, anchor
   rounding, refusals. Mirror `MoneyPropertyTests.cs`; wrap `Gen` values in
   `Math.Abs`. Spec: §B6.
