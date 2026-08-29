@@ -34,6 +34,7 @@ app.MapGet("/healthz", (Db db) =>
 app.MapAppraisalEndpoints();
 app.MapWorksheetEndpoints();
 app.MapOfferEndpoints();
+app.MapLifecycleEndpoints();
 
 app.Run();
 

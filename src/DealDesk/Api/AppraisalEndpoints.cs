@@ -12,8 +12,9 @@ namespace DealDesk.Api;
 public static class AppraisalEndpoints
 {
     /// Every appraisal query selects exactly these, in schema order. A const
-    /// so the SQL stays a compile-time literal.
-    private const string Columns =
+    /// so the SQL stays a compile-time literal. Internal because the lifecycle
+    /// routes serve the same row after they change it.
+    internal const string Columns =
         "id, vin, model_year, make, model, trim_level, miles, appraiser, " +
         "status, created_at, updated_at";
 
