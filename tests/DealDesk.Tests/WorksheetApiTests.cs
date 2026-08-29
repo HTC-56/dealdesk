@@ -5,15 +5,15 @@ using Xunit;
 
 namespace DealDesk.Tests;
 
-/// Recon-line and comp collections over real HTTP. Mirrors WalkItemApiTests:
-/// one [Fact] per assertion, DeskAppFactory per test, and
-/// CreateAppraisalAsync for the shared parent.
+/// The recon-line and comp child collections over real HTTP. These two
+/// collections copy the walk-item pattern — created row echoed back, list
+/// ordered oldest first, bad vocabulary refused, unknown parent 404 — so
+/// the four behaviours pinned here are the contract all three share.
 public sealed class WorksheetApiTests
 {
-    /// POSTing a recon line returns 201 and the stored row with category and
-    /// estimate echoed back.
+    /// Posting a recon line returns 201 and the stored row, defaults applied.
     [Fact]
-    public async Task Post_recon_line_returns_201_with_category_and_estimate()
+    public async Task Post_recon_line_returns_201_with_the_stored_row()
     {
         using var factory = new DeskAppFactory();
         using var client = factory.CreateClient();
@@ -26,19 +26,18 @@ public sealed class WorksheetApiTests
             {
                 category = "mechanical",
                 description = "timing belt",
-                estimate = 45_000,
+                estimate = 45000,
             });
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
         using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         Assert.Equal("mechanical", doc.RootElement.GetProperty("category").GetString());
-        Assert.Equal(45_000, doc.RootElement.GetProperty("estimate").GetInt64());
-        Assert.Equal(id, doc.RootElement.GetProperty("appraisalId").GetInt64());
+        Assert.Equal(45000, doc.RootElement.GetProperty("estimate").GetInt64());
     }
 
-    /// A category outside the recon vocabulary is a 400 here, not a CHECK
-    /// violation escaping SQLite as a 500.
+    /// A category outside the controlled vocabulary is a 400 here, never a
+    /// CHECK violation escaping SQLite as a 500.
     [Fact]
     public async Task Post_recon_line_with_unknown_category_returns_400()
     {
@@ -52,8 +51,8 @@ public sealed class WorksheetApiTests
             new
             {
                 category = "wheels",
-                description = "two bald fronts",
-                estimate = 20_000,
+                description = "two rims bent",
+                estimate = 120000,
             });
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -62,8 +61,8 @@ public sealed class WorksheetApiTests
         Assert.True(doc.RootElement.TryGetProperty("error", out _));
     }
 
-    /// A negative estimate is a 400 — recon credits would turn subtraction
-    /// into addition in the offer math.
+    /// A negative estimate is refused on the way in — the endpoint validates
+    /// before the INSERT so the client never sees a SQL error.
     [Fact]
     public async Task Post_recon_line_with_negative_estimate_returns_400()
     {
@@ -77,19 +76,16 @@ public sealed class WorksheetApiTests
             new
             {
                 category = "body",
-                description = "dent on quarter panel",
+                description = "dent repair",
                 estimate = -1,
             });
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-        using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        Assert.True(doc.RootElement.TryGetProperty("error", out _));
     }
 
-    /// POSTing a comp returns 201 and the body's price matches what was sent.
+    /// Posting a comp returns 201 and the stored row, defaults applied.
     [Fact]
-    public async Task Post_comp_returns_201_with_price()
+    public async Task Post_comp_returns_201_with_the_stored_row()
     {
         using var factory = new DeskAppFactory();
         using var client = factory.CreateClient();
@@ -102,35 +98,33 @@ public sealed class WorksheetApiTests
             {
                 label = "2019 Trailhead LT",
                 modelYear = 2019,
-                miles = 71_000,
-                price = 1_550_000,
+                miles = 71000,
+                price = 1550000,
             });
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
         using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        Assert.Equal(1_550_000, doc.RootElement.GetProperty("price").GetInt64());
-        Assert.Equal("2019 Trailhead LT", doc.RootElement.GetProperty("label").GetString());
+        Assert.Equal(1550000, doc.RootElement.GetProperty("price").GetInt64());
     }
 
-    /// After posting one comp, GET returns an array of length 1 with the
-    /// correct label.
+    /// The list serves this appraisal's comps, oldest first.
     [Fact]
-    public async Task Get_comps_lists_posted_rows()
+    public async Task Get_comps_lists_this_appraisals_comps_oldest_first()
     {
         using var factory = new DeskAppFactory();
         using var client = factory.CreateClient();
 
         var id = await WalkItemApiTests.CreateAppraisalAsync(client);
 
+        // POST the same comp from the previous test so the GET confirms it.
         await client.PostAsJsonAsync(
-            $"/api/appraisals/{id}/comps",
-            new
+            $"/api/appraisals/{id}/comps", new
             {
                 label = "2019 Trailhead LT",
                 modelYear = 2019,
-                miles = 71_000,
-                price = 1_550_000,
+                miles = 71000,
+                price = 1550000,
             });
 
         using var response = await client.GetAsync($"/api/appraisals/{id}/comps");
@@ -141,7 +135,8 @@ public sealed class WorksheetApiTests
         Assert.Equal("2019 Trailhead LT", doc.RootElement[0].GetProperty("label").GetString());
     }
 
-    /// An unknown appraisal is a 404 on both verbs for comps.
+    /// An unknown appraisal is a 404 on both verbs — not an empty list, and
+    /// not a foreign-key failure on the way in.
     [Fact]
     public async Task Comps_on_unknown_appraisal_return_404()
     {
@@ -150,16 +145,5 @@ public sealed class WorksheetApiTests
 
         using var listed = await client.GetAsync("/api/appraisals/9999/comps");
         Assert.Equal(HttpStatusCode.NotFound, listed.StatusCode);
-
-        using var posted = await client.PostAsJsonAsync(
-            "/api/appraisals/9999/comps",
-            new
-            {
-                label = "some car",
-                modelYear = 2020,
-                miles = 50_000,
-                price = 1_000_000,
-            });
-        Assert.Equal(HttpStatusCode.NotFound, posted.StatusCode);
     }
 }

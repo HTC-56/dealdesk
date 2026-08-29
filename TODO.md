@@ -85,7 +85,7 @@ scripts/scrub-check.sh`.** Money on the wire is whole cents; JSON is camelCase.
 - [x] C5 — Add the comp pair (GET + POST `/api/appraisals/{id}/comps`) to
   `src/DealDesk/Api/WorksheetEndpoints.cs`, mirroring the recon-line pair you
   just wrote. Spec: §C5.
-- [ ] C6 — Create `tests/DealDesk.Tests/WorksheetApiTests.cs`: six HTTP
+- [x] C6 — Create `tests/DealDesk.Tests/WorksheetApiTests.cs`: six HTTP
   assertions over recon-lines and comps (201s, two 400s, the list, a 404).
   Mirror `WalkItemApiTests.cs`. Spec: §C6.
 - [ ] C7 — Create `tests/DealDesk.Tests/OfferApiTests.cs`: six HTTP assertions
