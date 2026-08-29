@@ -33,6 +33,7 @@ curl http://localhost:5000/healthz
 ## The API
 
 - `GET /healthz` — health check, returns schema version
+- `GET /metrics` — Prometheus text: request counters and worksheet counts by status
 - `POST /api/appraisals` — create a new appraisal in draft status
 - `GET /api/appraisals` — list all appraisals, newest first; optional `?status=` filter
 - `GET /api/appraisals/{id}` — retrieve one appraisal by id
@@ -74,6 +75,8 @@ is a 409.
 **Recon actuals carry their variance.** Actual costs post against a recon estimate line, many per line, and `GET .../recon-variance` serves `variance = actual − estimate` for every line, rolled up by category and for the worksheet. A positive variance means the line ran over estimate. A posting may be negative — that is a credit — but never zero, and `unpostedLines` says how many lines nothing has been spent against yet.
 
 **Three reports summarise the store.** Report routes are `GET /api/reports/...`, take no id and never 404 — an empty store is an empty report. `GET .../look-to-book` groups by appraiser, counting worksheets seen, appraised, bought and lost, with the booking rate in basis points (`2500` is 25.00%). `GET .../recon-variance` rolls every worksheet's recon lines into category rows with totals. `GET .../front-gross` counts won worksheets, subtracts recon overage from the planned gross, and flags unposted lines. Rates travel as basis points; money as whole cents.
+
+**The ops surface is three things.** `GET /metrics` serves hand-rolled Prometheus text — request counters labelled by method and status, and a `dealdesk_appraisals` gauge counting worksheets by lifecycle status. Every request also appends one JSON line to the ops ledger (`ledger.jsonl` by default, moved with `DEALDESK_Ops__LedgerPath`), which keeps the request path the metric labels deliberately leave out. Setting `DEALDESK_Auth__Token` arms a static bearer token on writes: POST, PUT, PATCH and DELETE then need an `Authorization: Bearer` header and answer 401 without one, while reads, `/healthz` and `/metrics` stay open. Leave it unset and writes are open, as the quickstart above runs them.
 
 ```bash
 curl http://localhost:5000/api/appraisals/1/offer

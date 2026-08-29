@@ -237,7 +237,7 @@ response reaches the caller, so use `OpsSmokeTests.ScrapeUntilAsync` and
 - [x] G8 — Create `tests/DealDesk.Tests/BearerAuthApiTests.cs`: six HTTP
   assertions over the token (401 without, 401 wrong, PUT guarded, reads open,
   near miss, unset token open). Mirror `OpsSmokeTests.cs`. Spec: §G8.
-- [ ] G9 — Edit `README.md`: add `GET /metrics` to `## The API` and one ops
+- [x] G9 — Edit `README.md`: add `GET /metrics` to `## The API` and one ops
   paragraph. The healthz sample stays `005_reports` — no migration this phase.
   Gate: `bash verify.sh`. Spec: §G9.
 - [ ] G10 — Run `bash verify.sh`, append a `## Phase G` section to STATUS.md,
