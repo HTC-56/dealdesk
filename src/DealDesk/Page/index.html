@@ -1,0 +1,811 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>dealdesk — the appraisal desk</title>
+  <!--
+    SPEC.md feature 6. One self-contained file: inline CSS, inline JS, no
+    framework, no build step, no CDN, no web font, no image. The page makes
+    exactly the same relative fetches a curl session would, and nothing else —
+    the whole document loads from this one response, so dealdesk still makes
+    zero outbound requests when a browser is pointed at it.
+  -->
+  <style>
+    :root {
+      --ink: #1c1f23;
+      --muted: #5d666f;
+      --rule: #d7dce1;
+      --panel: #ffffff;
+      --page: #f4f6f8;
+      --over: #a4362f;
+      --under: #1f6f43;
+      --accent: #274b6d;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0 0 4rem;
+      background: var(--page);
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    header {
+      background: var(--accent);
+      color: #f7f9fb;
+      padding: 1.25rem 1.5rem;
+    }
+
+    header h1 { margin: 0; font-size: 1.5rem; letter-spacing: 0.02em; }
+    header p { margin: 0.35rem 0 0; max-width: 60ch; color: #cfdae6; }
+
+    main {
+      display: grid;
+      gap: 1.25rem;
+      padding: 1.25rem 1.5rem;
+      max-width: 1180px;
+    }
+
+    section {
+      background: var(--panel);
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      padding: 1rem 1.15rem 1.25rem;
+    }
+
+    h2 { margin: 0 0 0.75rem; font-size: 1.15rem; }
+    h3 { margin: 1.1rem 0 0.4rem; font-size: 0.95rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    h3:first-of-type { margin-top: 0.4rem; }
+
+    table { border-collapse: collapse; width: 100%; margin-bottom: 0.5rem; }
+    th, td { border-bottom: 1px solid var(--rule); padding: 0.35rem 0.5rem; text-align: left; vertical-align: top; }
+    th { color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    tbody tr.pick:hover { background: #eef3f8; cursor: pointer; }
+    tbody tr.chosen { background: #e3ecf5; }
+
+    .badge {
+      display: inline-block;
+      padding: 0.05rem 0.45rem;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .over { color: var(--over); }
+    .under { color: var(--under); }
+    .muted { color: var(--muted); }
+
+    form { display: flex; flex-wrap: wrap; gap: 0.5rem 0.75rem; align-items: flex-end; margin: 0 0 0.75rem; }
+    label { display: flex; flex-direction: column; font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    input, select { font: inherit; padding: 0.3rem 0.4rem; border: 1px solid var(--rule); border-radius: 4px; background: #fff; color: var(--ink); }
+    input.short { width: 7rem; }
+    input.wide { width: 15rem; }
+
+    button {
+      font: inherit;
+      padding: 0.35rem 0.9rem;
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    button.quiet { background: #fff; color: var(--accent); }
+    button:disabled { opacity: 0.5; cursor: default; }
+
+    #flash { margin-top: 0.6rem; padding: 0.4rem 0.6rem; border-radius: 4px; background: #f7f9fb; color: var(--accent); }
+    #flash.bad { background: #fbe9e8; color: var(--over); }
+
+    .split { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+    .total { font-size: 1.35rem; font-variant-numeric: tabular-nums; }
+    .foot { color: var(--muted); font-size: 0.85rem; margin: 0.25rem 0 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>dealdesk</h1>
+    <p>
+      The appraisal desk: what the market says, what the car needs, what the
+      store must make — therefore what to put on the worksheet. Every number
+      shows its derivation; every change is on the trail.
+    </p>
+    <p id="flash" hidden></p>
+  </header>
+
+  <main>
+    <section id="appraisals">
+      <h2>Appraisals</h2>
+
+      <form id="new-worksheet">
+        <label>VIN <input id="new-vin" class="wide" maxlength="17" placeholder="17 characters"></label>
+        <label>Year <input id="new-year" class="short" type="number" value="2021"></label>
+        <label>Make <input id="new-make" class="short"></label>
+        <label>Model <input id="new-model" class="short"></label>
+        <label>Trim <input id="new-trim" class="short"></label>
+        <label>Miles <input id="new-miles" class="short" type="number" value="0"></label>
+        <label>Appraiser <input id="new-appraiser" class="short"></label>
+        <button type="submit">Open worksheet</button>
+      </form>
+
+      <form id="list-controls">
+        <label>Status
+          <select id="status-filter">
+            <option value="">all</option>
+            <option value="draft">draft</option>
+            <option value="appraised">appraised</option>
+            <option value="presented">presented</option>
+            <option value="won">won</option>
+            <option value="lost">lost</option>
+          </select>
+        </label>
+        <button type="button" class="quiet" id="reload-list">Reload</button>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th>Vehicle</th>
+            <th>VIN</th>
+            <th class="num">Miles</th>
+            <th>Appraiser</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="appraisal-rows"></tbody>
+      </table>
+      <p class="foot" id="appraisal-count">Loading…</p>
+    </section>
+
+    <section id="worksheet">
+      <h2>Worksheet</h2>
+      <p class="foot" id="worksheet-empty">Choose an appraisal above to open its worksheet.</p>
+
+      <div id="worksheet-body" hidden>
+        <p id="vehicle" class="total"></p>
+
+        <div class="split">
+          <div>
+            <h3>Offer math</h3>
+            <form id="offer-form">
+              <label>Pack ($) <input id="pack" class="short" inputmode="decimal"></label>
+              <label>Target front gross ($) <input id="target-gross" class="short" inputmode="decimal"></label>
+              <label>Anchor override ($) <input id="anchor-override" class="short" inputmode="decimal" placeholder="comps"></label>
+              <button type="submit" id="save-offer-inputs">Save store numbers</button>
+            </form>
+
+            <table>
+              <thead>
+                <tr><th>Step</th><th class="num">Amount</th><th class="num">Running total</th></tr>
+              </thead>
+              <tbody id="derivation"></tbody>
+            </table>
+            <p class="total">Recommended trade value: <strong id="recommended">—</strong></p>
+            <p class="foot" id="offer-note"></p>
+          </div>
+
+          <div>
+            <h3>Lifecycle</h3>
+            <form id="status-form">
+              <label>Move to
+                <select id="next-status">
+                  <option value="appraised">appraised</option>
+                  <option value="presented">presented</option>
+                  <option value="won">won</option>
+                  <option value="lost">lost</option>
+                </select>
+              </label>
+              <label>Changed by <input id="changed-by" class="short"></label>
+              <label>Reason <input id="reason" class="wide"></label>
+              <button type="submit">Record the move</button>
+            </form>
+            <p class="foot" id="status-note"></p>
+
+            <h3>Recon variance</h3>
+            <table>
+              <thead>
+                <tr><th>Line</th><th class="num">Estimate</th><th class="num">Actual</th><th class="num">Variance</th></tr>
+              </thead>
+              <tbody id="variance-rows"></tbody>
+            </table>
+            <p class="foot" id="variance-note"></p>
+          </div>
+        </div>
+
+        <div class="split">
+          <div>
+            <h3>Condition walk</h3>
+            <form id="walk-form">
+              <label>Area
+                <select id="walk-area">
+                  <option>exterior</option>
+                  <option>interior</option>
+                  <option>mechanical</option>
+                  <option>tires</option>
+                  <option>glass</option>
+                  <option>electronics</option>
+                  <option>other</option>
+                </select>
+              </label>
+              <label>Severity
+                <select id="walk-severity">
+                  <option>minor</option>
+                  <option>moderate</option>
+                  <option>severe</option>
+                </select>
+              </label>
+              <label>Note <input id="walk-note" class="short"></label>
+              <button type="submit" class="quiet">Add</button>
+            </form>
+            <table>
+              <thead><tr><th>Area</th><th>Severity</th><th>Note</th></tr></thead>
+              <tbody id="walk-rows"></tbody>
+            </table>
+          </div>
+
+          <div>
+            <h3>Recon estimate</h3>
+            <form id="recon-form">
+              <label>Category
+                <select id="recon-category">
+                  <option>mechanical</option>
+                  <option>body</option>
+                  <option>paint</option>
+                  <option>tires</option>
+                  <option>glass</option>
+                  <option>interior</option>
+                  <option>detail</option>
+                  <option>other</option>
+                </select>
+              </label>
+              <label>Description <input id="recon-description" class="short"></label>
+              <label>Estimate ($) <input id="recon-estimate" class="short" inputmode="decimal"></label>
+              <button type="submit" class="quiet">Add</button>
+            </form>
+            <table>
+              <thead><tr><th>Category</th><th>Description</th><th class="num">Estimate</th></tr></thead>
+              <tbody id="recon-rows"></tbody>
+            </table>
+          </div>
+
+          <div>
+            <h3>Market comps</h3>
+            <form id="comp-form">
+              <label>Label <input id="comp-label" class="short"></label>
+              <label>Year <input id="comp-year" class="short" type="number" value="2021"></label>
+              <label>Miles <input id="comp-miles" class="short" type="number" value="0"></label>
+              <label>Price ($) <input id="comp-price" class="short" inputmode="decimal"></label>
+              <button type="submit" class="quiet">Add</button>
+            </form>
+            <table>
+              <thead><tr><th>Label</th><th class="num">Year</th><th class="num">Miles</th><th class="num">Price</th></tr></thead>
+              <tbody id="comp-rows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="audit">
+      <h2>Audit trail</h2>
+      <table>
+        <thead>
+          <tr><th>When</th><th>Field</th><th>From</th><th>To</th><th>By</th><th>Reason</th></tr>
+        </thead>
+        <tbody id="audit-rows"></tbody>
+      </table>
+      <p class="foot" id="audit-note">Choose an appraisal to read its trail.</p>
+    </section>
+
+    <section id="reports">
+      <h2>Reports</h2>
+      <form id="report-controls">
+        <button type="button" class="quiet" id="reload-reports">Reload reports</button>
+      </form>
+
+      <h3>Look to book</h3>
+      <table id="look-to-book">
+        <thead>
+          <tr><th>Appraiser</th><th class="num">Looked</th><th class="num">Appraised</th><th class="num">Booked</th><th class="num">Lost</th><th class="num">Open</th><th class="num">Book rate</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <h3>Recon variance by category</h3>
+      <table id="recon-variance">
+        <thead>
+          <tr><th>Category</th><th class="num">Lines</th><th class="num">Estimate</th><th class="num">Actual</th><th class="num">Variance</th><th class="num">Unposted</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <h3>Front gross by appraiser</h3>
+      <table id="front-gross">
+        <thead>
+          <tr><th>Appraiser</th><th class="num">Won</th><th class="num">Target gross</th><th class="num">Recon variance</th><th class="num">Projected gross</th><th class="num">Unposted</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <p class="foot">
+        Money is whole cents on the wire and dollars on this page. Rates arrive
+        as basis points — 2500 is 25.00%. A positive recon variance means recon
+        ran over estimate.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    'use strict';
+
+    // ---- wire format -----------------------------------------------------
+    //
+    // Money crosses the wire as a whole number of cents and a rate as basis
+    // points, for the same reason: a JSON number is a double in a browser, and
+    // the offer math exists to be exact. Every conversion on this page is
+    // integer arithmetic on strings, so nothing this file renders was ever a
+    // floating-point dollar.
+
+    function money(cents) {
+      const negative = cents < 0;
+      const abs = Math.abs(cents);
+      const whole = String(Math.trunc(abs / 100)).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      const part = String(abs % 100).padStart(2, '0');
+      return (negative ? '-$' : '$') + whole + '.' + part;
+    }
+
+    // Dollars as typed into a form, exactly. Returns null when the text is not
+    // a number the desk could have meant.
+    function toCents(text) {
+      const trimmed = String(text == null ? '' : text).trim();
+      if (trimmed === '') { return null; }
+      if (!/^-?\d+(\.\d{1,2})?$/.test(trimmed)) { return null; }
+      const negative = trimmed.charAt(0) === '-';
+      const body = negative ? trimmed.slice(1) : trimmed;
+      const halves = body.split('.');
+      const cents = (Number(halves[0]) * 100) + Number(((halves[1] || '') + '00').slice(0, 2));
+      return negative ? -cents : cents;
+    }
+
+    function dollars(cents) {
+      const negative = cents < 0;
+      const abs = Math.abs(cents);
+      return (negative ? '-' : '') + Math.trunc(abs / 100) + '.' + String(abs % 100).padStart(2, '0');
+    }
+
+    function rate(basisPoints) {
+      return (Math.trunc(basisPoints) / 100).toFixed(2) + '%';
+    }
+
+    // ---- the offer math, previewed ---------------------------------------
+    //
+    // These two mirror src/DealDesk/Domain/OfferMath.cs step for step so the
+    // desk sees the number move as it types. They are a PREVIEW, never the
+    // authority: pressing Save writes the store numbers and re-reads
+    // GET .../offer, and the note under the total says which one is showing.
+
+    function marketAnchor(prices) {
+      const total = prices.reduce(function (sum, price) { return sum + price; }, 0);
+      const count = prices.length;
+      const quotient = Math.trunc(total / count);
+      const remainder = total - (quotient * count);
+      const nudge = Math.abs(remainder) * 2 >= count ? Math.sign(total) : 0;
+      return quotient + nudge;
+    }
+
+    function derive(anchor, overridden, recon, pack, targetGross) {
+      const steps = [];
+      let running = 0;
+
+      function step(label, amount) {
+        running += amount;
+        steps.push({ label: label, amount: amount, runningTotal: running });
+      }
+
+      step(overridden ? 'Market anchor (entered)' : 'Market anchor (comp average)', anchor);
+      step('Less recon estimate', -recon);
+      step('Less pack', -pack);
+      step('Less target front gross', -targetGross);
+
+      return { recommended: running, derivation: steps };
+    }
+
+    // ---- talking to the API ----------------------------------------------
+
+    const state = { chosen: null, comps: [], reconLines: [], servedRecommended: null };
+
+    function el(id) { return document.getElementById(id); }
+
+    function flash(message, bad) {
+      const banner = el('flash');
+      banner.textContent = message;
+      banner.hidden = false;
+      if (bad) { banner.classList.add('bad'); } else { banner.classList.remove('bad'); }
+    }
+
+    async function api(method, path, body) {
+      const options = { method: method, headers: {} };
+      if (body !== undefined) {
+        options.headers['Content-Type'] = 'application/json';
+        options.body = JSON.stringify(body);
+      }
+
+      const response = await fetch(path, options);
+      const text = await response.text();
+      const payload = text === '' ? null : JSON.parse(text);
+
+      if (!response.ok) {
+        const reason = payload && payload.error ? payload.error : response.status + ' ' + response.statusText;
+        throw new Error(reason);
+      }
+
+      return payload;
+    }
+
+    function get(path) { return api('GET', path); }
+
+    function cell(row, text, klass) {
+      const td = document.createElement('td');
+      td.textContent = text;
+      if (klass) { td.className = klass; }
+      row.appendChild(td);
+      return td;
+    }
+
+    function fill(tbody, rows, build) {
+      tbody.replaceChildren();
+      rows.forEach(function (item, index) {
+        const tr = document.createElement('tr');
+        build(tr, item, index);
+        tbody.appendChild(tr);
+      });
+    }
+
+    function signed(cents) {
+      return cents > 0 ? 'num over' : (cents < 0 ? 'num under' : 'num');
+    }
+
+    // ---- the appraisal list ----------------------------------------------
+
+    async function loadList() {
+      const filter = el('status-filter').value;
+      const path = '/api/appraisals' + (filter === '' ? '' : '?status=' + encodeURIComponent(filter));
+      const rows = await get(path);
+
+      fill(el('appraisal-rows'), rows, function (tr, row) {
+        tr.className = 'pick' + (state.chosen === row.id ? ' chosen' : '');
+        cell(tr, String(row.id), 'num');
+        cell(tr, row.modelYear + ' ' + row.make + ' ' + row.model + ' ' + row.trimLevel);
+        cell(tr, row.vin);
+        cell(tr, row.miles.toLocaleString('en-US'), 'num');
+        cell(tr, row.appraiser);
+        const status = cell(tr, '');
+        const badge = document.createElement('span');
+        badge.className = 'badge';
+        badge.textContent = row.status;
+        status.appendChild(badge);
+        tr.addEventListener('click', function () { choose(row.id); });
+      });
+
+      el('appraisal-count').textContent =
+        rows.length + (rows.length === 1 ? ' worksheet' : ' worksheets') +
+        (filter === '' ? ', newest first' : ' with status ' + filter);
+    }
+
+    // ---- one worksheet ---------------------------------------------------
+
+    async function choose(id) {
+      state.chosen = id;
+      el('worksheet-empty').hidden = true;
+      el('worksheet-body').hidden = false;
+
+      const car = await get('/api/appraisals/' + id);
+      el('vehicle').textContent =
+        '#' + car.id + ' — ' + car.modelYear + ' ' + car.make + ' ' + car.model + ' ' +
+        car.trimLevel + ' · ' + car.miles.toLocaleString('en-US') + ' miles · ' +
+        car.appraiser + ' · ' + car.status;
+
+      const walk = await get('/api/appraisals/' + id + '/walk-items');
+      fill(el('walk-rows'), walk, function (tr, item) {
+        cell(tr, item.area);
+        cell(tr, item.severity);
+        cell(tr, item.note);
+      });
+
+      state.reconLines = await get('/api/appraisals/' + id + '/recon-lines');
+      fill(el('recon-rows'), state.reconLines, function (tr, line) {
+        cell(tr, line.category);
+        cell(tr, line.description);
+        cell(tr, money(line.estimate), 'num');
+      });
+
+      state.comps = await get('/api/appraisals/' + id + '/comps');
+      fill(el('comp-rows'), state.comps, function (tr, comp) {
+        cell(tr, comp.label);
+        cell(tr, String(comp.modelYear), 'num');
+        cell(tr, comp.miles.toLocaleString('en-US'), 'num');
+        cell(tr, money(comp.price), 'num');
+      });
+
+      const inputs = await get('/api/appraisals/' + id + '/offer-inputs');
+      el('pack').value = dollars(inputs.pack);
+      el('target-gross').value = dollars(inputs.targetGross);
+      el('anchor-override').value = inputs.anchorOverride == null ? '' : dollars(inputs.anchorOverride);
+
+      await loadOffer();
+      await loadVariance();
+      await loadTrail();
+      await loadList();
+    }
+
+    // The served price, which is the only one that counts. A worksheet with
+    // neither a comp nor a typed anchor answers 409 — not an error the desk
+    // needs to see in red, just a car nobody can price yet.
+    async function loadOffer() {
+      const response = await fetch('/api/appraisals/' + state.chosen + '/offer');
+      if (response.status === 409) {
+        state.servedRecommended = null;
+      } else if (response.ok) {
+        const offer = await response.json();
+        state.servedRecommended = offer.recommended;
+      } else {
+        state.servedRecommended = null;
+      }
+
+      preview();
+    }
+
+    // Recomputes the derivation from what is on the form right now.
+    function preview() {
+      const pack = toCents(el('pack').value) || 0;
+      const targetGross = toCents(el('target-gross').value) || 0;
+      const typedAnchor = toCents(el('anchor-override').value);
+      const recon = state.reconLines.reduce(function (sum, line) { return sum + line.estimate; }, 0);
+      const prices = state.comps.map(function (comp) { return comp.price; });
+
+      if (typedAnchor === null && prices.length === 0) {
+        el('derivation').replaceChildren();
+        el('recommended').textContent = '—';
+        el('offer-note').textContent =
+          'No comps and no anchor override, so there is no market anchor to price from.';
+        return;
+      }
+
+      const anchor = typedAnchor === null ? marketAnchor(prices) : typedAnchor;
+      const offer = derive(anchor, typedAnchor !== null, recon, pack, targetGross);
+
+      fill(el('derivation'), offer.derivation, function (tr, line) {
+        cell(tr, line.label);
+        cell(tr, money(line.amount), 'num');
+        cell(tr, money(line.runningTotal), 'num');
+      });
+
+      el('recommended').textContent = money(offer.recommended);
+      el('offer-note').textContent = state.servedRecommended === offer.recommended
+        ? 'Matches the saved offer the service serves at GET /api/appraisals/' + state.chosen + '/offer.'
+        : 'Preview from the numbers on this form — press Save to price it on the server.';
+    }
+
+    async function loadVariance() {
+      const variance = await get('/api/appraisals/' + state.chosen + '/recon-variance');
+
+      fill(el('variance-rows'), variance.lines, function (tr, line) {
+        cell(tr, line.category + ' · ' + line.description);
+        cell(tr, money(line.estimate), 'num');
+        cell(tr, money(line.actual), 'num');
+        cell(tr, money(line.variance), signed(line.variance));
+      });
+
+      el('variance-note').textContent = variance.lines.length === 0
+        ? 'No recon lines on this worksheet yet.'
+        : 'Worksheet variance ' + money(variance.totalVariance) + ' · ' +
+          variance.unpostedLines + ' line(s) with nothing posted against them yet.';
+    }
+
+    async function loadTrail() {
+      const entries = await get('/api/appraisals/' + state.chosen + '/audit');
+
+      fill(el('audit-rows'), entries, function (tr, entry) {
+        cell(tr, entry.changedAt.slice(0, 19).replace('T', ' '));
+        cell(tr, entry.field);
+        cell(tr, entry.oldValue);
+        cell(tr, entry.newValue);
+        cell(tr, entry.changedBy);
+        cell(tr, entry.reason);
+      });
+
+      el('audit-note').textContent = entries.length === 0
+        ? 'Nothing has changed on worksheet ' + state.chosen + ' yet.'
+        : entries.length + ' recorded change(s) on worksheet ' + state.chosen + ', newest first.';
+    }
+
+    // ---- the three reports -----------------------------------------------
+
+    async function loadReports() {
+      const book = await get('/api/reports/look-to-book');
+      fill(el('look-to-book').tBodies[0], book.rows.concat([book]), function (tr, row, index) {
+        const store = index === book.rows.length;
+        cell(tr, store ? 'Store' : row.appraiser);
+        cell(tr, String(row.looked), 'num');
+        cell(tr, String(row.appraised), 'num');
+        cell(tr, String(row.booked), 'num');
+        cell(tr, String(row.lost), 'num');
+        cell(tr, String(row.openWorksheets), 'num');
+        cell(tr, rate(row.bookRateBps), 'num');
+        if (store) { tr.className = 'chosen'; }
+      });
+
+      const recon = await get('/api/reports/recon-variance');
+      fill(el('recon-variance').tBodies[0], recon.rows, function (tr, row) {
+        cell(tr, row.category);
+        cell(tr, String(row.lineCount), 'num');
+        cell(tr, money(row.estimate), 'num');
+        cell(tr, money(row.actual), 'num');
+        cell(tr, money(row.variance), signed(row.variance));
+        cell(tr, String(row.unpostedLines), 'num');
+      });
+
+      const gross = await get('/api/reports/front-gross');
+      fill(el('front-gross').tBodies[0], gross.rows.concat([gross]), function (tr, row, index) {
+        const store = index === gross.rows.length;
+        cell(tr, store ? 'Store' : row.appraiser);
+        cell(tr, String(row.wonCount), 'num');
+        cell(tr, money(store ? row.totalTargetGross : row.targetGross), 'num');
+        const varianceCents = store ? row.totalReconVariance : row.reconVariance;
+        cell(tr, money(varianceCents), signed(varianceCents));
+        cell(tr, money(store ? row.totalProjectedGross : row.projectedGross), 'num');
+        cell(tr, String(row.unpostedLines), 'num');
+        if (store) { tr.className = 'chosen'; }
+      });
+    }
+
+    // ---- writes ----------------------------------------------------------
+
+    function guard(handler) {
+      return async function (event) {
+        event.preventDefault();
+        try {
+          await handler();
+        } catch (error) {
+          flash(error.message, true);
+        }
+      };
+    }
+
+    function requireChosen() {
+      if (state.chosen === null) { throw new Error('Choose an appraisal first.'); }
+      return state.chosen;
+    }
+
+    el('new-worksheet').addEventListener('submit', guard(async function () {
+      const created = await api('POST', '/api/appraisals', {
+        vin: el('new-vin').value.trim(),
+        modelYear: Number(el('new-year').value),
+        make: el('new-make').value.trim(),
+        model: el('new-model').value.trim(),
+        trimLevel: el('new-trim').value.trim(),
+        miles: Number(el('new-miles').value),
+        appraiser: el('new-appraiser').value.trim(),
+      });
+
+      flash('Opened worksheet ' + created.id + ' in draft.');
+      el('new-vin').value = '';
+      await loadList();
+      await choose(created.id);
+    }));
+
+    el('offer-form').addEventListener('submit', guard(async function () {
+      const id = requireChosen();
+      const pack = toCents(el('pack').value);
+      const targetGross = toCents(el('target-gross').value);
+      const typedAnchor = toCents(el('anchor-override').value);
+
+      if (pack === null || targetGross === null) {
+        throw new Error('Pack and target front gross must both be dollar amounts.');
+      }
+
+      await api('PUT', '/api/appraisals/' + id + '/offer-inputs', {
+        pack: pack,
+        targetGross: targetGross,
+        anchorOverride: typedAnchor,
+      });
+
+      flash('Store numbers saved on worksheet ' + id + '.');
+      await loadOffer();
+      await loadReports();
+    }));
+
+    el('status-form').addEventListener('submit', guard(async function () {
+      const id = requireChosen();
+      await api('POST', '/api/appraisals/' + id + '/status', {
+        status: el('next-status').value,
+        changedBy: el('changed-by').value.trim(),
+        reason: el('reason').value.trim(),
+      });
+
+      flash('Worksheet ' + id + ' moved to ' + el('next-status').value + '.');
+      el('reason').value = '';
+      await choose(id);
+      await loadReports();
+    }));
+
+    el('walk-form').addEventListener('submit', guard(async function () {
+      const id = requireChosen();
+      await api('POST', '/api/appraisals/' + id + '/walk-items', {
+        area: el('walk-area').value,
+        severity: el('walk-severity').value,
+        note: el('walk-note').value.trim(),
+      });
+
+      el('walk-note').value = '';
+      flash('Walk item added.');
+      await choose(id);
+    }));
+
+    el('recon-form').addEventListener('submit', guard(async function () {
+      const id = requireChosen();
+      const estimate = toCents(el('recon-estimate').value);
+      if (estimate === null) { throw new Error('The recon estimate must be a dollar amount.'); }
+
+      await api('POST', '/api/appraisals/' + id + '/recon-lines', {
+        category: el('recon-category').value,
+        description: el('recon-description').value.trim(),
+        estimate: estimate,
+      });
+
+      el('recon-description').value = '';
+      el('recon-estimate').value = '';
+      flash('Recon line added — the offer math moved with it.');
+      await choose(id);
+    }));
+
+    el('comp-form').addEventListener('submit', guard(async function () {
+      const id = requireChosen();
+      const price = toCents(el('comp-price').value);
+      if (price === null) { throw new Error('The comp price must be a dollar amount.'); }
+
+      await api('POST', '/api/appraisals/' + id + '/comps', {
+        label: el('comp-label').value.trim(),
+        modelYear: Number(el('comp-year').value),
+        miles: Number(el('comp-miles').value),
+        price: price,
+        note: '',
+      });
+
+      el('comp-label').value = '';
+      el('comp-price').value = '';
+      flash('Comp added — the anchor is their average.');
+      await choose(id);
+    }));
+
+    ['pack', 'target-gross', 'anchor-override'].forEach(function (id) {
+      el(id).addEventListener('input', preview);
+    });
+
+    el('status-filter').addEventListener('change', guard(loadList));
+    el('reload-list').addEventListener('click', guard(loadList));
+    el('reload-reports').addEventListener('click', guard(loadReports));
+
+    el('status-note').textContent =
+      'draft → appraised → presented → won, and lost from any open state. ' +
+      'Every move records who and why on the trail below.';
+
+    (async function start() {
+      try {
+        await loadList();
+        await loadReports();
+      } catch (error) {
+        flash('Could not reach the API: ' + error.message, true);
+      }
+    })();
+  </script>
+</body>
+</html>

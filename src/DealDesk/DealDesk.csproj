@@ -20,6 +20,16 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <!-- The desk page rides inside the assembly for the same reason the schema
+       does: the single-file publish must carry its own user interface, with no
+       wwwroot directory to copy beside the binary. Logical name is
+       "page.index.html"; PageEndpoints reads it. -->
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Page/*.html">
+      <LogicalName>page.%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="DealDesk.Tests" />
   </ItemGroup>
