@@ -33,6 +33,7 @@ app.MapGet("/healthz", (Db db) =>
 // collections, and the offer math that prices them.
 app.MapAppraisalEndpoints();
 app.MapWorksheetEndpoints();
+app.MapOfferEndpoints();
 
 app.Run();
 
