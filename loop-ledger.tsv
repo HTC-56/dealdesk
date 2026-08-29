@@ -5,3 +5,4 @@ time	lane	model	result	turns	out_tok	tools	edits	dur_s	task
 2026-08-29T11:26:40	loop	qwen	commit	93	13667	43	5	578	- [ ] A5 — Create `tests/DealDesk.Tests/MoneyArithmeticTests.cs`: six more
 2026-08-29T11:30:44	loop	qwen	commit	104	18535	43	8	243	- [ ] A6 — Create `tests/DealDesk.Tests/MoneyStorageTests.cs`: Money survives a
 2026-08-29T11:36:33	loop	qwen	commit	106	18132	42	10	348	- [ ] A7 — Create `tests/DealDesk.Tests/AppraisalConstraintTests.cs`: the four
+2026-08-29T11:38:29	loop	qwen	commit	99	13554	40	9	114	- [ ] A8 — Create `verify.sh` (all four gates + README-path lint), append a
