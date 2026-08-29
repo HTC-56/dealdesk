@@ -11,11 +11,34 @@ internal sealed class DeskAppFactory : WebApplicationFactory<Program>
     private readonly string directory =
         Path.Combine(Path.GetTempPath(), "dealdesk-app-" + Guid.NewGuid().ToString("N"));
 
+    private readonly string? authToken;
+
+    /// Writes are open, exactly as a fresh clone runs them.
+    public DeskAppFactory()
+        : this(null)
+    {
+    }
+
+    /// Arms the static bearer token on write endpoints. Only the ops tests
+    /// pass one; every other test file boots the open app.
+    public DeskAppFactory(string? authToken) => this.authToken = authToken;
+
+    /// The JSONL ops ledger this instance writes to. Inside the throwaway
+    /// directory, so a test run leaves no ledger behind and two factories never
+    /// read each other's lines.
+    public string LedgerPath => Path.Combine(directory, "ledger.jsonl");
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
         Directory.CreateDirectory(directory);
         builder.UseSetting("Db:Path", Path.Combine(directory, "app.db"));
+        builder.UseSetting("Ops:LedgerPath", LedgerPath);
+
+        if (!string.IsNullOrWhiteSpace(authToken))
+        {
+            builder.UseSetting("Auth:Token", authToken);
+        }
     }
 
     protected override void Dispose(bool disposing)
