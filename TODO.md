@@ -309,7 +309,7 @@ this phase and you never edit `index.html`. The page is served at `/` as
 - [x] I7 — Create `tests/DealDesk.Tests/DeskPageRouteTests.cs`: six facts
   pairing page to API (exactly two `/api/` prefixes, the route literals, three
   writes that land, one read-back). Mirror `DeskPageSmokeTests.cs`. Spec: §I7.
-- [ ] I8 — Edit `README.md`: add `GET /` as the first `## The API` bullet, one
+- [x] I8 — Edit `README.md`: add `GET /` as the first `## The API` bullet, one
   browser sentence in the quickstart, and one desk-page paragraph. The healthz
   sample stays `005_reports`. Gate: `bash verify.sh`. Spec: §I8.
 - [ ] I9 — Run `bash verify.sh`, append a `## Phase I` section to STATUS.md,
