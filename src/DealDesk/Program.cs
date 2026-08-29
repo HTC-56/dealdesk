@@ -1,4 +1,5 @@
 using Dapper;
+using DealDesk.Api;
 using DealDesk.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,10 @@ app.MapGet("/healthz", (Db db) =>
         schema = schema ?? "none",
     });
 });
+
+// Worksheet endpoints live in Api/AppraisalEndpoints.cs so this file stays a
+// wiring file rather than growing a handler per feature.
+app.MapAppraisalEndpoints();
 
 app.Run();
 
