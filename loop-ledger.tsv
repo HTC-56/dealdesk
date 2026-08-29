@@ -22,3 +22,4 @@ time	lane	model	result	turns	out_tok	tools	edits	dur_s	task
 2026-08-29T13:28:43	loop	qwen	commit	79	8469	33	5	89	- [ ] D5 — Create `tests/DealDesk.Tests/LifecycleTests.cs`: six rule assertions
 2026-08-29T13:28:52	plan	claude	commit	105	121717	66	14	728	plan next phase
 2026-08-29T13:34:33	loop	qwen	commit	121	17490	49	13	349	- [ ] D6 — Create `tests/DealDesk.Tests/AuditSchemaTests.cs`: six assertions
+2026-08-29T13:36:58	loop	qwen	commit	114	20385	46	12	143	- [ ] D7 — Create `tests/DealDesk.Tests/LifecycleApiTests.cs`: six HTTP
