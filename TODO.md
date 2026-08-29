@@ -66,7 +66,7 @@ and its path constants.
   `deploy/dealdesk.service` (section order, `Type=exec`, unprivileged user,
   one writable path, restart on failure, every path absolute). Mirror
   `PackagingSmokeTests.cs`. Spec: §J6.
-- [ ] J7 — Create `tests/DealDesk.Tests/DeployEnvTests.cs`: six facts about
+- [x] J7 — Create `tests/DealDesk.Tests/DeployEnvTests.cs`: six facts about
   `deploy/dealdesk.env.example` (one assignment per line, the two live keys,
   the token left commented, loopback only, paths under the unit's writable
   directory, the bundle extract dir). Mirror `PackagingSmokeTests.cs`.
