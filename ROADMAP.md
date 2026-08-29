@@ -6,7 +6,7 @@ are the one permitted exception to append-only docs.
 | # | Feature (SPEC.md) | Status | Phase | Note |
 |---|---|---|---|---|
 | 1 | .NET 8 minimal API + SQLite/Dapper + migrator | SHIPPED | A | scaffold, migrator, Money, 001_init, Phase A gates |
-| 2 | Appraisal worksheet + offer math with visible derivation | PARTIAL | B | VIN, 002 schema, OfferMath, appraisal create/read; child + offer endpoints open |
+| 2 | Appraisal worksheet + offer math with visible derivation | PARTIAL | B | domain math + schema + appraisal create/read; child-collection and offer endpoints still open |
 | 3 | Lifecycle + append-only audit trail | NOT BUILT | — | |
 | 4 | Recon actuals + variance | NOT BUILT | — | |
 | 5 | The three reports (look-to-book, recon variance, gross by appraiser) | NOT BUILT | — | |

@@ -65,6 +65,6 @@ format --verify-no-changes`, `bash scripts/scrub-check.sh`.** Demo VINs:
 - [x] B10 — Create `tests/DealDesk.Tests/AppraisalApiTests.cs`: six HTTP
   assertions over POST and GET (201, round-trip, two 400s, the list, 404).
   Mirror `HealthzTests.cs`; served JSON is camelCase. Spec: §B10.
-- [ ] B11 — Run `bash verify.sh`, append a `## Phase B` section to STATUS.md,
+- [x] B11 — Run `bash verify.sh`, append a `## Phase B` section to STATUS.md,
   and flip ROADMAP row 2 to PARTIAL / phase B. Closes Phase B. Gate:
   `bash verify.sh`. Spec: §B11.
