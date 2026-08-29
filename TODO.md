@@ -123,7 +123,7 @@ illegal move = 409. Every write needs `changedBy` and `reason`.
 - [x] D7 — Create `tests/DealDesk.Tests/LifecycleApiTests.cs`: six HTTP
   assertions over `POST .../status` and `GET .../audit` (200, trail entry, 409,
   two 400s, full walk, 404s). Mirror `WalkItemApiTests.cs`. Spec: §D7.
-- [ ] D8 — Create `tests/DealDesk.Tests/RevisionApiTests.cs`: six HTTP
+- [x] D8 — Create `tests/DealDesk.Tests/RevisionApiTests.cs`: six HTTP
   assertions over `PATCH /api/appraisals/{id}` (200, one trail entry, two
   entries, no-op writes none, two 400s, 404). Mirror `LifecycleApiTests.cs`.
   Spec: §D8.
