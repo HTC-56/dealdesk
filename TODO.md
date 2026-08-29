@@ -223,7 +223,7 @@ never the path. Reads are never guarded. Both observers record AFTER the
 response reaches the caller, so use `OpsSmokeTests.ScrapeUntilAsync` and
 `OpsSmokeTests.LedgerLinesAsync` rather than reading once.
 
-- [ ] G5 — Create `tests/DealDesk.Tests/OpsMetricsTests.cs`: six laws over
+- [x] G5 — Create `tests/DealDesk.Tests/OpsMetricsTests.cs`: six laws over
   `OpsMetrics` (empty family, separate totals, method case, status series,
   ordering, Gauge + Escape). Mirror `ReportRateTests.cs`; no database.
   Spec: §G5.
