@@ -31,8 +31,11 @@ curl http://localhost:5000/healthz
 # {"status":"ok","schema":"005_reports"}
 ```
 
+Open `http://localhost:5000/` in a browser for the desk page.
+
 ## The API
 
+- `GET /` — the desk page: worksheet, appraisal list, audit trail and three reports
 - `GET /healthz` — health check, returns schema version
 - `GET /metrics` — Prometheus text: request counters and worksheet counts by status
 - `POST /api/appraisals` — create a new appraisal in draft status
@@ -80,6 +83,8 @@ is a 409.
 **The ops surface is three things.** `GET /metrics` serves hand-rolled Prometheus text — request counters labelled by method and status, and a `dealdesk_appraisals` gauge counting worksheets by lifecycle status. Every request also appends one JSON line to the ops ledger (`ledger.jsonl` by default, moved with `DEALDESK_Ops__LedgerPath`), which keeps the request path the metric labels deliberately leave out. Setting `DEALDESK_Auth__Token` arms a static bearer token on writes: POST, PUT, PATCH and DELETE then need an `Authorization: Bearer` header and answer 401 without one, while reads, `/healthz` and `/metrics` stay open. Leave it unset and writes are open, as the quickstart above runs them.
 
 `dotnet run --project src/DealDesk -- seed` writes a demo month — twelve worksheets across three invented appraisers, covering all five lifecycle states, with fifteen recon lines across every category, some posted against and some not, so the reports show real numbers on first run. Every name, VIN and price is invented, and dealdesk never looks a VIN up anywhere. The seed refuses to run a second time: a database that already holds worksheets is left exactly as it is, so nobody can write two demo months over each other.
+
+`GET /` serves the desk page — one hand-written HTML file with its CSS and its JavaScript inline, no framework, no build step, no CDN and no web font, so the page makes no request to anywhere but this service. It shows the appraisal list with lifecycle states, one worksheet with its walk, recon lines, comps and store numbers, the offer derivation recomputed live as the desk types, the audit trail, and all three reports. The live numbers are a preview; `GET .../offer` on the server is the authority. Money is typed in dollars and travels as whole cents.
 
 ```bash
 curl http://localhost:5000/api/appraisals/1/offer
