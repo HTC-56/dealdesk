@@ -266,7 +266,7 @@ and `SeedSmokeTests.ReadAsync()`.
   assertions over a seeded worksheet (list order, status filter, worksheet 1's
   fields and children, offer inputs, the audit trail). Mirror
   `WalkItemApiTests.cs`. Spec: §H5.
-- [ ] H6 — Create `tests/DealDesk.Tests/SeedReportApiTests.cs`: six HTTP
+- [x] H6 — Create `tests/DealDesk.Tests/SeedReportApiTests.cs`: six HTTP
   assertions over the per-appraiser ROWS of look-to-book and front-gross (name
   order, three rate rows, both signs of recon variance). Mirror
   `LookToBookApiTests.cs`. Spec: §H6.
