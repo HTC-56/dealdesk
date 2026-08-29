@@ -6,7 +6,7 @@ are the one permitted exception to append-only docs.
 | # | Feature (SPEC.md) | Status | Phase | Note |
 |---|---|---|---|---|
 | 1 | .NET 8 minimal API + SQLite/Dapper + migrator | SHIPPED | A | scaffold, migrator, Money, 001_init, Phase A gates |
-| 2 | Appraisal worksheet + offer math with visible derivation | NOT BUILT | — | centerpiece; property-tested |
+| 2 | Appraisal worksheet + offer math with visible derivation | PARTIAL | B | VIN, 002 schema, OfferMath, appraisal create/read; child + offer endpoints open |
 | 3 | Lifecycle + append-only audit trail | NOT BUILT | — | |
 | 4 | Recon actuals + variance | NOT BUILT | — | |
 | 5 | The three reports (look-to-book, recon variance, gross by appraiser) | NOT BUILT | — | |
@@ -36,3 +36,27 @@ planning lane declares PROJECT SPEC COMPLETE rather than inventing scope.
 - **Dapper snake_case matching is global** (Phase A, `src/DealDesk/Data/Db.cs`).
   `DefaultTypeMap.MatchNamesWithUnderscores = true`, so queries select real
   column names and later phases write no `AS` aliases.
+- **The anchor is the comp arithmetic mean** (Phase B,
+  `src/DealDesk/Domain/OfferMath.cs`). SPEC.md names hand-entered comps as
+  "the anchor" without naming the reduction. Taken as their mean to the
+  nearest cent, halves away from zero — the least surprising reading — with a
+  per-worksheet `anchor_override` column so the desk can type a different
+  number instead. Revisit if a playtest says the desk wants a median or a
+  low-comp rule.
+- **Money columns carry no `_cents` suffix** (Phase B,
+  `sql/002_worksheet.sql`). `estimate`, `price`, `pack`, `target_gross`,
+  `anchor_override` are INTEGER cents; the bare names let snake_case matching
+  land them directly on `Money` properties, keeping the no-`AS`-alias rule
+  above.
+- **The recon category vocabulary is fixed in the schema** (Phase B,
+  `sql/002_worksheet.sql`). A CHECK constraint, not free text, because
+  feature 5's recon-variance report groups by category and free text would
+  make that report meaningless.
+- **Phase B write endpoints are unauthenticated** (Phase B,
+  `src/DealDesk/Api/AppraisalEndpoints.cs`). The static bearer token on writes
+  is feature 7; `POST /api/appraisals` is open until that ships, and no other
+  phase may treat that as precedent.
+- **`HealthzTests` asserts the newest available migration** (Phase B,
+  `tests/DealDesk.Tests/HealthzTests.cs`). It hardcoded `001_`, which adding
+  `002_worksheet.sql` would have dated; it now compares against
+  `Migrator.Available()[^1]` so no future migration breaks it.

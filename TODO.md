@@ -34,3 +34,37 @@ Scaffold, migrator, Money and the first tests are already committed (`feat(A1)`,
 - [x] A8 — Create `verify.sh` (all four gates + README-path lint), append a
   `## Phase A` section to STATUS.md, and flip the ROADMAP row 1 to SHIPPED.
   Closes Phase A. Gate: `bash verify.sh`. Spec: §A8.
+
+## Phase B: the worksheet and offer math — see TASK_PHASE_B.md
+
+Phase A above is CLOSED and kept only as a style reference. Phase B is the open
+one. `Vin.cs`, `sql/002_worksheet.sql`, `OfferMath.cs` and the `Api/` layer are
+already committed (`feat(B1)`–`feat(B4)`); the tree is green at 28 tests.
+**Gate for every task: `dotnet build -warnaserror`, `dotnet test`, `dotnet
+format --verify-no-changes`, `bash scripts/scrub-check.sh`.** Demo VINs:
+`ZZ9ZZ99Z2Z9000042` is valid, `ZZ9ZZ99Z9Z9000042` is not. Use seeds 2001+.
+
+- [ ] B5 — Create `tests/DealDesk.Tests/VinTests.cs`: six VIN facts (the
+  valid/invalid pair, lowercase, bad lengths + null, I/O/Q, CheckDigit and
+  WithCheckDigit, Normalize throws). Mirror `MoneyArithmeticTests.cs`.
+  Spec: §B5.
+- [ ] B6 — Create `tests/DealDesk.Tests/OfferMathTests.cs`: six laws — the
+  derivation sums exactly, running totals, ≤ anchor − recon, four lines, anchor
+  rounding, refusals. Mirror `MoneyPropertyTests.cs`; wrap `Gen` values in
+  `Math.Abs`. Spec: §B6.
+- [ ] B7 — Create `tests/DealDesk.Tests/WorksheetSchemaTests.cs`: the
+  `sql/002_worksheet.sql` CHECK constraints on recon_line, comp, walk_item and
+  offer_input, plus cascade delete. Mirror `AppraisalConstraintTests.cs`.
+  Spec: §B7.
+- [ ] B8 — Add `GET /api/appraisals` (every row, newest first, optional
+  `status` filter) to `src/DealDesk/Api/AppraisalEndpoints.cs`, mirroring the
+  `{id:long}` handler right above it. Spec: §B8.
+- [ ] B9 — Add `POST /api/appraisals` to
+  `src/DealDesk/Api/AppraisalEndpoints.cs`: `Validate()` → 400, else insert a
+  draft row with `RETURNING id` → 201 + Location. Spec: §B9.
+- [ ] B10 — Create `tests/DealDesk.Tests/AppraisalApiTests.cs`: six HTTP
+  assertions over POST and GET (201, round-trip, two 400s, the list, 404).
+  Mirror `HealthzTests.cs`; served JSON is camelCase. Spec: §B10.
+- [ ] B11 — Run `bash verify.sh`, append a `## Phase B` section to STATUS.md,
+  and flip ROADMAP row 2 to PARTIAL / phase B. Closes Phase B. Gate:
+  `bash verify.sh`. Spec: §B11.
