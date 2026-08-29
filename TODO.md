@@ -294,7 +294,7 @@ this phase and you never edit `index.html`. The page is served at `/` as
 `appraisals`, `worksheet`, `audit`, `reports`. Reuse
 `DeskPageSmokeTests.PageAsync()`, `.PanelIds` and `.ReadRoutes`.
 
-- [ ] I4 — Create `tests/DealDesk.Tests/DeskPageApiTests.cs`: six facts about
+- [x] I4 — Create `tests/DealDesk.Tests/DeskPageApiTests.cs`: six facts about
   the root route (content type, two identical GETs, three 404s, open under the
   token, counted in `/metrics`, not truncated). Mirror `MetricsApiTests.cs`.
   Spec: §I4.
