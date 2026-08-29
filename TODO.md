@@ -149,7 +149,7 @@ recon LINE and its amount may be negative (a credit) but never zero.
   `/api/appraisals/{id}/recon-lines/{lineId}/actuals`) to
   `src/DealDesk/Api/ReconEndpoints.cs`, mirroring the recon-line pair in
   `WorksheetEndpoints.cs`. `ReconLineBelongs` already exists. Spec: §E5.
-- [ ] E6 — Create `tests/DealDesk.Tests/ReconActualSchemaTests.cs`: six
+- [x] E6 — Create `tests/DealDesk.Tests/ReconActualSchemaTests.cs`: six
   assertions over `sql/004_recon_actual.sql` — good row inserts, three CHECKs
   reject, a credit is allowed, postings cascade with their line. Mirror
   `AuditSchemaTests.cs`. Spec: §E6.
