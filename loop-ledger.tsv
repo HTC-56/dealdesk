@@ -2,3 +2,4 @@ time	lane	model	result	turns	out_tok	tools	edits	dur_s	task
 2026-08-29T11:01:32	plan	claude	commit	97	140350	56	30	673	plan next phase
 2026-08-29T11:13:23	loop	qwen	commit	64	17600	25	2	758	- [ ] A3 — Create `scripts/scrub-check.sh`: scan `git ls-files` output for home
 2026-08-29T11:17:01	loop	qwen	commit	110	23949	47	4	217	- [ ] A4 — Create `README.md`: what dealdesk is, requirements, quickstart
+2026-08-29T11:26:40	loop	qwen	commit	93	13667	43	5	578	- [ ] A5 — Create `tests/DealDesk.Tests/MoneyArithmeticTests.cs`: six more
