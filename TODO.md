@@ -306,7 +306,7 @@ this phase and you never edit `index.html`. The page is served at `/` as
   each panel carries what SPEC feature 6 says (panel order, five statuses,
   eight recon categories, the derivation, the trail columns, three report
   tables). Mirror `DeskPageSmokeTests.cs`. Spec: §I6.
-- [ ] I7 — Create `tests/DealDesk.Tests/DeskPageRouteTests.cs`: six facts
+- [x] I7 — Create `tests/DealDesk.Tests/DeskPageRouteTests.cs`: six facts
   pairing page to API (exactly two `/api/` prefixes, the route literals, three
   writes that land, one read-back). Mirror `DeskPageSmokeTests.cs`. Spec: §I7.
 - [ ] I8 — Edit `README.md`: add `GET /` as the first `## The API` bullet, one
