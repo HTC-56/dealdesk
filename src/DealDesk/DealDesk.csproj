@@ -10,6 +10,26 @@
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.8" />
   </ItemGroup>
 
+  <!-- Deploy shape. Every property here is conditioned on a runtime identifier
+       being chosen, so `dotnet build`, `dotnet test` and `dotnet format` are
+       untouched, and `dotnet publish -c Release -r linux-x64` yields ONE
+       executable: the app, the .NET runtime, the SQLite native library and the
+       debug symbols all inside it. IncludeNativeLibrariesForSelfExtract is what
+       folds libe_sqlite3.so in — without it the "single file" ships a sidecar
+       .so and the systemd unit would have to point at a directory instead of a
+       binary. Deliberately NOT trimmed: Dapper materialises rows by reflection
+       and the minimal API binds DTO records the same way, so a trimmed publish
+       would build clean and fail at the first query. -->
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <PublishTrimmed>false</PublishTrimmed>
+    <DebugType>embedded</DebugType>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+
   <!-- Migrations ship inside the assembly so the single-file publish carries its
        own schema. Logical names look like "sql.001_init.sql"; Migrator reads them.
        sql/seed.sql rides along as "sql.seed.sql" for Seeder — Migrator's name
