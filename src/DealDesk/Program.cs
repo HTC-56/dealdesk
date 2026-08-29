@@ -3,6 +3,27 @@ using DealDesk.Api;
 using DealDesk.Data;
 using DealDesk.Ops;
 
+// `dotnet run --project src/DealDesk -- seed` writes the demo month and exits
+// without ever listening on a port. Handled before the host builder because the
+// command-line configuration provider only understands `--switch value` pairs
+// and would refuse a bare verb.
+if (args.Length > 0 && args[0] == "seed")
+{
+    var seedConfiguration = new ConfigurationBuilder()
+        .AddEnvironmentVariables("DEALDESK_")
+        .Build();
+
+    var seedDb = new Db(seedConfiguration["Db:Path"] ?? "dealdesk.db");
+    seedDb.Migrate();
+
+    var written = Seeder.Apply(seedDb);
+    Console.WriteLine(written == 0
+        ? $"dealdesk: {seedDb.Path} already holds appraisals — seed declined."
+        : $"dealdesk: seeded {written} appraisals into {seedDb.Path}.");
+
+    return;
+}
+
 var builder = WebApplication.CreateBuilder(args);
 
 // DEALDESK_Db__Path overrides appsettings; tests point it at a temp file.

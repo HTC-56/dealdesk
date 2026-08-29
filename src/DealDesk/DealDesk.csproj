@@ -11,7 +11,9 @@
   </ItemGroup>
 
   <!-- Migrations ship inside the assembly so the single-file publish carries its
-       own schema. Logical names look like "sql.001_init.sql"; Migrator reads them. -->
+       own schema. Logical names look like "sql.001_init.sql"; Migrator reads them.
+       sql/seed.sql rides along as "sql.seed.sql" for Seeder — Migrator's name
+       pattern only matches NNN_*.sql, so the demo month is never auto-applied. -->
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../../sql/*.sql">
       <LogicalName>sql.%(Filename)%(Extension)</LogicalName>
