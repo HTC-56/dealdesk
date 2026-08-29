@@ -30,12 +30,14 @@ app.MapGet("/healthz", (Db db) =>
 
 // Worksheet endpoints live under Api/ so this file stays a wiring file rather
 // than growing a handler per feature: the appraisal itself, its child
-// collections, and the offer math that prices them.
+// collections, the offer math that prices them, and the reports that read
+// across every worksheet at once.
 app.MapAppraisalEndpoints();
 app.MapWorksheetEndpoints();
 app.MapOfferEndpoints();
 app.MapLifecycleEndpoints();
 app.MapReconEndpoints();
+app.MapReportEndpoints();
 
 app.Run();
 
