@@ -209,3 +209,37 @@ report. Rates travel as basis points (`2500` is 25.00%). Reuse
 - [x] F11 — Run `bash verify.sh`, append a `## Phase F` section to STATUS.md,
   and flip ROADMAP row 5 to SHIPPED / phase F. Closes Phase F. Gate:
   `bash verify.sh`. Spec: §F11.
+
+## Phase G: the ops surface — see TASK_PHASE_G.md
+
+Phases A–F above are CLOSED and kept only as style references. **Phase G is the
+open one.** `Ops/OpsMetrics.cs`, `Ops/OpsLedger.cs`, `Ops/OpsRecording.cs`,
+`Ops/BearerAuth.cs`, `Api/OpsEndpoints.cs` and `tests/OpsSmokeTests.cs` are
+already committed (`feat(G1)`–`feat(G4)`); the tree is green at 156 tests.
+**Gate for every task: `dotnet build -warnaserror`, `dotnet test`, `dotnet
+format --verify-no-changes`, `bash scripts/scrub-check.sh`.** You add no source
+code this phase — every type is finished. Metrics label method and status,
+never the path. Reads are never guarded. Both observers record AFTER the
+response reaches the caller, so use `OpsSmokeTests.ScrapeUntilAsync` and
+`OpsSmokeTests.LedgerLinesAsync` rather than reading once.
+
+- [ ] G5 — Create `tests/DealDesk.Tests/OpsMetricsTests.cs`: six laws over
+  `OpsMetrics` (empty family, separate totals, method case, status series,
+  ordering, Gauge + Escape). Mirror `ReportRateTests.cs`; no database.
+  Spec: §G5.
+- [ ] G6 — Create `tests/DealDesk.Tests/OpsLedgerTests.cs`: six facts over
+  `OpsLedger` (disabled, appends, Line fields, UTC ts, a quoted path, parent
+  directory). Mirror `ReportRateTests.cs`; own temp dir per fact. Spec: §G6.
+- [ ] G7 — Create `tests/DealDesk.Tests/MetricsApiTests.cs`: six HTTP
+  assertions over `GET /metrics` (content type, a 404 counted, a POST counted,
+  the gauge moving, the duration family, no token needed). Mirror
+  `OpsSmokeTests.cs`. Spec: §G7.
+- [ ] G8 — Create `tests/DealDesk.Tests/BearerAuthApiTests.cs`: six HTTP
+  assertions over the token (401 without, 401 wrong, PUT guarded, reads open,
+  near miss, unset token open). Mirror `OpsSmokeTests.cs`. Spec: §G8.
+- [ ] G9 — Edit `README.md`: add `GET /metrics` to `## The API` and one ops
+  paragraph. The healthz sample stays `005_reports` — no migration this phase.
+  Gate: `bash verify.sh`. Spec: §G9.
+- [ ] G10 — Run `bash verify.sh`, append a `## Phase G` section to STATUS.md,
+  and flip ROADMAP row 7 to SHIPPED / phase A, G. Closes Phase G. Gate:
+  `bash verify.sh`. Spec: §G10.

@@ -11,7 +11,7 @@ are the one permitted exception to append-only docs.
 | 4 | Recon actuals + variance | SHIPPED | E | line-by-line actuals with credits, and variance served per line, by category and per worksheet |
 | 5 | The three reports (look-to-book, recon variance, gross by appraiser) | SHIPPED | F | all three routes with per-appraiser/category rollup, basis-point rates, store totals from rows |
 | 6 | The desk page (self-contained) | NOT BUILT | — | hero screenshot |
-| 7 | Ops surface (/healthz, /metrics, ledger, bearer auth) | PARTIAL | A | /healthz only; /metrics, ledger, bearer auth still open |
+| 7 | Ops surface (/healthz, /metrics, ledger, bearer auth) | PARTIAL | A, G | /metrics, the JSONL ledger and the bearer token landed in G1–G4; §G10 closes the row |
 | 8 | Seeded demo data | NOT BUILT | — | |
 | 9 | Deploy-grade packaging (single-file publish, unit file, CI, quickstart) | PARTIAL | A | README quickstart in A4; publish, unit file, CI still open |
 | — | docs/PROCESS.md (the loop story) | NOT BUILT | — | written near the end, when there is a ledger to excerpt |
@@ -167,6 +167,40 @@ planning lane declares PROJECT SPEC COMPLETE rather than inventing scope.
   does on the worksheet. Restricting the report to posted lines would have
   read better but would have put two variance definitions in the repo;
   `unposted_lines` is carried beside the money instead.
+- **An unset token leaves writes open** (Phase G,
+  `src/DealDesk/Ops/BearerAuth.cs`). SPEC.md names "static bearer token on
+  write endpoints" without saying what an unconfigured deployment does. Taken
+  as: no `Auth:Token`, no guard — a fresh clone runs the README's five-minute
+  path with no configuration step, exactly as it has since Phase B, and a
+  deployment that sets the value gets the guard. Refusing every write until
+  something is configured would mean the quickstart opened with a token to
+  invent. Both a missing and a wrong token answer 401 rather than 403: the
+  credential is what is wrong, and dealdesk has exactly one to offer. Revisit
+  if the publish decision ever puts this on a network that is not localhost.
+- **Metric labels carry no request path** (Phase G,
+  `src/DealDesk/Ops/OpsMetrics.cs`). Series are labelled by method and status
+  only. `/api/appraisals/{id}` as a label would mint a time series per
+  worksheet, and unbounded cardinality is how a hand-rolled scrape target
+  turns into memory the process never gives back. The path is kept on every
+  line of the JSONL ledger instead, where growth is a file on disk — that
+  division is the reason the repo carries both.
+- **The ledger observes and never refuses** (Phase G,
+  `src/DealDesk/Ops/OpsLedger.cs`). Write failures are swallowed: losing an
+  ops line is not worth failing an appraisal the database has already
+  committed. Both observers also record AFTER the response reaches the caller,
+  so no request is ever delayed to be written down — which is why the ops
+  tests poll rather than read once. Timestamps are `DateTimeOffset` round-trip
+  UTC, matching `created_at` and the audit trail rather than inventing a
+  second time format.
+- **`/metrics` reads its gauges at scrape time and emits the zeros** (Phase G,
+  `src/DealDesk/Api/OpsEndpoints.cs`). The HTTP counters come from memory, but
+  `dealdesk_appraisals` is a `GROUP BY status` against SQLite on each scrape —
+  a worksheet count that drifted from the database would be worse than one
+  that costs a query. All five lifecycle statuses are emitted even at zero,
+  because a series that vanishes when its count empties reads on a dashboard
+  as a failed scrape rather than a store that sold nothing. `COUNT(*) AS
+  count` is the one aliased column in the repo; every other query selects real
+  column names.
 - **`HealthzTests` asserts the newest available migration** (Phase B,
   `tests/DealDesk.Tests/HealthzTests.cs`). It hardcoded `001_`, which adding
   `002_worksheet.sql` would have dated; it now compares against
