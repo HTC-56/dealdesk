@@ -1,5 +1,7 @@
+using DealDesk.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DealDesk.Tests;
 
@@ -27,6 +29,12 @@ internal sealed class DeskAppFactory : WebApplicationFactory<Program>
     /// directory, so a test run leaves no ledger behind and two factories never
     /// read each other's lines.
     public string LedgerPath => Path.Combine(directory, "ledger.jsonl");
+
+    /// Writes the demo month into this instance's database — the same script
+    /// `dotnet run --project src/DealDesk -- seed` runs. Touching Services boots
+    /// the host, so the schema is already current when the seed lands. Returns
+    /// how many worksheets it wrote, or 0 if this factory was seeded already.
+    public int Seed() => Seeder.Apply(Services.GetRequiredService<Db>());
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
