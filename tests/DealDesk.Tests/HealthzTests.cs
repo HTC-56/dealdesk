@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using DealDesk.Data;
 using Xunit;
 
 namespace DealDesk.Tests;
@@ -23,10 +24,11 @@ public sealed class HealthzTests
         Assert.Equal("ok", json.RootElement.GetProperty("status").GetString());
 
         // Startup migrated the temp database, so healthz must name a real
-        // migration rather than "none".
+        // migration rather than "none" — and specifically the newest one the
+        // assembly carries, so adding a migration never dates this test.
         var schema = json.RootElement.GetProperty("schema").GetString();
         Assert.NotNull(schema);
         Assert.NotEqual("none", schema);
-        Assert.StartsWith("001_", schema, StringComparison.Ordinal);
+        Assert.Equal(Migrator.Available()[^1], schema);
     }
 }

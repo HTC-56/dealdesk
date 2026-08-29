@@ -27,7 +27,7 @@ The service answers on `http://localhost:5000/healthz`:
 
 ```bash
 curl http://localhost:5000/healthz
-# {"status":"ok","schema":"001_init"}
+# {"status":"ok","schema":"002_worksheet"}
 ```
 
 ## Layout
