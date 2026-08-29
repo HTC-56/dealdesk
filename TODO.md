@@ -280,3 +280,38 @@ and `SeedSmokeTests.ReadAsync()`.
 - [x] H9 — Run `bash verify.sh`, append a `## Phase H` section to STATUS.md,
   and flip ROADMAP row 8 to SHIPPED / phase H. Closes Phase H. Gate:
   `bash verify.sh`. Spec: §H9.
+
+## Phase I: the desk page — see TASK_PHASE_I.md
+
+Phases A–H above are CLOSED and kept only as style references. **Phase I is the
+open one.** `src/DealDesk/Page/index.html`, `Api/PageEndpoints.cs`, the csproj
+embed and `tests/DeskPageSmokeTests.cs` are already committed
+(`feat(I1)`–`feat(I3)`); the tree is green at 212 tests. **Gate for every task:
+`dotnet build -warnaserror`, `dotnet test`, `dotnet format
+--verify-no-changes`, `bash scripts/scrub-check.sh`.** You add no `src/` code
+this phase and you never edit `index.html`. The page is served at `/` as
+`text/html`; its four panels are `<section id="…">` elements named
+`appraisals`, `worksheet`, `audit`, `reports`. Reuse
+`DeskPageSmokeTests.PageAsync()`, `.PanelIds` and `.ReadRoutes`.
+
+- [ ] I4 — Create `tests/DealDesk.Tests/DeskPageApiTests.cs`: six facts about
+  the root route (content type, two identical GETs, three 404s, open under the
+  token, counted in `/metrics`, not truncated). Mirror `MetricsApiTests.cs`.
+  Spec: §I4.
+- [ ] I5 — Create `tests/DealDesk.Tests/DeskPageSelfContainedTests.cs`: six
+  `DoesNotContain` facts pinning zero external requests (no `://`, no script
+  src, no link/@import, no font/img, one inline block of each, inline
+  behaviour). Mirror `DeskPageSmokeTests.cs`. Spec: §I5.
+- [ ] I6 — Create `tests/DealDesk.Tests/DeskPagePanelTests.cs`: six facts that
+  each panel carries what SPEC feature 6 says (panel order, five statuses,
+  eight recon categories, the derivation, the trail columns, three report
+  tables). Mirror `DeskPageSmokeTests.cs`. Spec: §I6.
+- [ ] I7 — Create `tests/DealDesk.Tests/DeskPageRouteTests.cs`: six facts
+  pairing page to API (exactly two `/api/` prefixes, the route literals, three
+  writes that land, one read-back). Mirror `DeskPageSmokeTests.cs`. Spec: §I7.
+- [ ] I8 — Edit `README.md`: add `GET /` as the first `## The API` bullet, one
+  browser sentence in the quickstart, and one desk-page paragraph. The healthz
+  sample stays `005_reports`. Gate: `bash verify.sh`. Spec: §I8.
+- [ ] I9 — Run `bash verify.sh`, append a `## Phase I` section to STATUS.md,
+  and flip ROADMAP row 6 to SHIPPED / phase I. Closes Phase I. Gate:
+  `bash verify.sh`. Spec: §I9.

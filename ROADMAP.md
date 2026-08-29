@@ -10,7 +10,7 @@ are the one permitted exception to append-only docs.
 | 3 | Lifecycle + append-only audit trail | SHIPPED | D | lifecycle rules, audited status moves and field revisions, append-only trail served newest-first |
 | 4 | Recon actuals + variance | SHIPPED | E | line-by-line actuals with credits, and variance served per line, by category and per worksheet |
 | 5 | The three reports (look-to-book, recon variance, gross by appraiser) | SHIPPED | F | all three routes with per-appraiser/category rollup, basis-point rates, store totals from rows |
-| 6 | The desk page (self-contained) | NOT BUILT | — | hero screenshot |
+| 6 | The desk page (self-contained) | PARTIAL | I | `GET /` serves the page; its test files close at §I9. Hero screenshot deferred |
 | 7 | Ops surface (/healthz, /metrics, ledger, bearer auth) | SHIPPED | A, G | /metrics, the JSONL ledger and the bearer token |
 | 8 | Seeded demo data | SHIPPED | H | seed.sql, Seeder, the `seed` verb; a demo month of twelve worksheets |
 | 9 | Deploy-grade packaging (single-file publish, unit file, CI, quickstart) | PARTIAL | A | README quickstart in A4; publish, unit file, CI still open |
@@ -231,6 +231,28 @@ planning lane declares PROJECT SPEC COMPLETE rather than inventing scope.
   refuses a bare verb. So the branch reads its database path from the
   environment through its own `ConfigurationBuilder` and returns before the
   host exists — which also means the seed never opens a port.
+- **The page previews the offer math rather than trusting it** (Phase I,
+  `src/DealDesk/Page/index.html`). SPEC.md feature 6 says "live offer math",
+  which needs the number to move as the desk types — a round trip per
+  keystroke would not be live. So the page re-implements `OfferMath.cs`'s four
+  steps in its own script, and says in the line under the total which number
+  is showing: a preview from the form, or the value `GET .../offer` last
+  served. The server stays the only authority. Two copies of one piece of
+  arithmetic is a real cost; the alternative was either a stale total or a
+  fetch on every keypress, and the derivation is four labelled subtractions
+  that the property tests already pin on the server side.
+- **Dollars are typed, cents are sent** (Phase I,
+  `src/DealDesk/Page/index.html`). Every money field on the page is entered in
+  dollars and converted to whole cents by string arithmetic — a regex, a
+  split and integer multiplication — never by `parseFloat`. The API's rule
+  that a JSON number is a double in a browser is exactly as true inside the
+  browser, so nothing this page renders was ever a floating-point dollar.
+- **NULL RESULT — no hero screenshot is committed** (Phase I). SPEC.md
+  feature 6 ends "The README hero screenshot", and feature 9 wants it in the
+  README. The loop has no browser and cannot open the page, so a screenshot
+  would be an image nobody in this lane could verify was of this page. §I8
+  tells a reader to open `/` instead, and the binary is left for a human with
+  a browser. This is the one part of feature 6 the loop did not ship.
 - **`HealthzTests` asserts the newest available migration** (Phase B,
   `tests/DealDesk.Tests/HealthzTests.cs`). It hardcoded `001_`, which adding
   `002_worksheet.sql` would have dated; it now compares against
