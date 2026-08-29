@@ -27,7 +27,7 @@ The service answers on `http://localhost:5000/healthz`:
 
 ```bash
 curl http://localhost:5000/healthz
-# {"status":"ok","schema":"003_audit"}
+# {"status":"ok","schema":"004_recon_actual"}
 ```
 
 ## The API
@@ -48,6 +48,9 @@ curl http://localhost:5000/healthz
 - `POST /api/appraisals/{id}/status` — move the worksheet through its lifecycle
 - `PATCH /api/appraisals/{id}` — revise worksheet fields, audited
 - `GET /api/appraisals/{id}/audit` — the change trail, newest first
+- `GET /api/appraisals/{id}/recon-lines/{lineId}/actuals` — posted actual costs for one estimate line
+- `POST /api/appraisals/{id}/recon-lines/{lineId}/actuals` — post an actual cost against that line
+- `GET /api/appraisals/{id}/recon-variance` — estimate vs actual, per line and by category
 
 **Money is whole cents.** Every money field on the wire — `estimate`, `price`,
 `pack`, `targetGross`, `anchorOverride`, `recommended` — is an integer number
@@ -64,6 +67,8 @@ when, old and new. The table is append-only — UPDATE and DELETE against it are
 refused by the database. The lifecycle is draft → appraised → presented → won |
 lost; `lost` is reachable from any open state, and a move the lifecycle refuses
 is a 409.
+
+**Recon actuals carry their variance.** Actual costs post against a recon estimate line, many per line, and `GET .../recon-variance` serves `variance = actual − estimate` for every line, rolled up by category and for the worksheet. A positive variance means the line ran over estimate. A posting may be negative — that is a credit — but never zero, and `unpostedLines` says how many lines nothing has been spent against yet.
 
 ```bash
 curl http://localhost:5000/api/appraisals/1/offer
