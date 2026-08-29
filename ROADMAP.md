@@ -9,7 +9,7 @@ are the one permitted exception to append-only docs.
 | 2 | Appraisal worksheet + offer math with visible derivation | SHIPPED | B–C | worksheet, child collections and the offer endpoint with its visible derivation |
 | 3 | Lifecycle + append-only audit trail | SHIPPED | D | lifecycle rules, audited status moves and field revisions, append-only trail served newest-first |
 | 4 | Recon actuals + variance | SHIPPED | E | line-by-line actuals with credits, and variance served per line, by category and per worksheet |
-| 5 | The three reports (look-to-book, recon variance, gross by appraiser) | NOT BUILT | — | |
+| 5 | The three reports (look-to-book, recon variance, gross by appraiser) | PARTIAL | F | four SQL views + the look-to-book and recon-variance endpoints; the front-gross route lands at §F5 |
 | 6 | The desk page (self-contained) | NOT BUILT | — | hero screenshot |
 | 7 | Ops surface (/healthz, /metrics, ledger, bearer auth) | PARTIAL | A | /healthz only; /metrics, ledger, bearer auth still open |
 | 8 | Seeded demo data | NOT BUILT | — | |
@@ -134,6 +134,39 @@ planning lane declares PROJECT SPEC COMPLETE rather than inventing scope.
   entry order or by size, so two worksheets carrying the same categories
   report them in the same order however their lines were typed — feature 5's
   recon-variance report reads across worksheets and needs that stability.
+- **Look-to-book rates booked against APPRAISED, read off the audit trail**
+  (Phase F, `sql/005_reports.sql`). SPEC.md names the report "appraised vs
+  won" without saying which count is the denominator. Taken as booked ÷
+  appraised — a worksheet abandoned in draft was never a real look at the car
+  — with `looked` carried beside it so a reader can see both. Whether a
+  worksheet ever reached `appraised` is not always readable from its current
+  status, because `lost` is reachable straight from `draft`; for those the
+  view asks `audit_entry` whether the status ever moved into `appraised`.
+  That is the first report to depend on the trail, and the reason it records
+  one row per field with the new value in it.
+- **A rate on the wire is basis points, never a fraction** (Phase F,
+  `src/DealDesk/Api/ReportDtos.cs`). `bookRateBps` of `2500` is 25.00%.
+  Integer hundredths of a percent for the same reason money is integer cents:
+  a JSON number is a double in a browser. Truncated toward zero, and a whole
+  of zero answers 0 rather than throwing — an appraiser with nothing
+  appraised has no rate yet, which is a fact about the month.
+- **Front gross is the PLANNED gross less recon overage** (Phase F,
+  `sql/005_reports.sql`). SPEC.md names "front gross by appraiser", but its
+  non-goals refuse desking beyond the trade worksheet, so dealdesk holds no
+  retail selling price to subtract a cost from. Taken as
+  `offer_input.target_gross` — the number the offer math already subtracts to
+  reach the recommended trade value — minus the worksheet's recon variance,
+  over won worksheets only. `unposted_lines` travels with it, because a
+  projection built on recon that has not finished posting is provisional.
+  Revisit if a playtest says the desk wants a realised gross instead, which
+  would need a selling price this v1 does not collect.
+- **The reports do not redefine variance** (Phase F, `sql/005_reports.sql`).
+  `report_recon_variance` and `report_front_gross` both use
+  `actual − estimate` over every line, exactly as Phase E fixed it, so an
+  unposted line reads as a full-estimate negative in the report just as it
+  does on the worksheet. Restricting the report to posted lines would have
+  read better but would have put two variance definitions in the repo;
+  `unposted_lines` is carried beside the money instead.
 - **`HealthzTests` asserts the newest available migration** (Phase B,
   `tests/DealDesk.Tests/HealthzTests.cs`). It hardcoded `001_`, which adding
   `002_worksheet.sql` would have dated; it now compares against
