@@ -240,6 +240,6 @@ response reaches the caller, so use `OpsSmokeTests.ScrapeUntilAsync` and
 - [x] G9 — Edit `README.md`: add `GET /metrics` to `## The API` and one ops
   paragraph. The healthz sample stays `005_reports` — no migration this phase.
   Gate: `bash verify.sh`. Spec: §G9.
-- [ ] G10 — Run `bash verify.sh`, append a `## Phase G` section to STATUS.md,
+- [x] G10 — Run `bash verify.sh`, append a `## Phase G` section to STATUS.md,
   and flip ROADMAP row 7 to SHIPPED / phase A, G. Closes Phase G. Gate:
   `bash verify.sh`. Spec: §G10.
