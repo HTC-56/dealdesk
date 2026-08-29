@@ -258,7 +258,7 @@ Every number a task asserts is listed in TASK_PHASE_H.md's "The demo month, in
 numbers". Reuse `SeedSmokeTests.SeededDb()`, `SeedSmokeTests.SeededClient()`
 and `SeedSmokeTests.ReadAsync()`.
 
-- [ ] H4 — Create `tests/DealDesk.Tests/SeedDataTests.cs`: six facts over the
+- [x] H4 — Create `tests/DealDesk.Tests/SeedDataTests.cs`: six facts over the
   seeded database (contiguous ids, two walk items each, the comp-less
   worksheet, the one credit, the trail, recent timestamps). Mirror
   `AuditSchemaTests.cs`; no HTTP. Spec: §H4.
