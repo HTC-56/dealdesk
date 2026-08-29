@@ -27,7 +27,7 @@ Scaffold, migrator, Money and the first tests are already committed (`feat(A1)`,
   Dapper round-trip as INTEGER cents, negatives included. Mirror
   `AppraisalRoundTripTests.cs`; scratch table in the test, no new migration.
   Spec: §A6.
-- [ ] A7 — Create `tests/DealDesk.Tests/AppraisalConstraintTests.cs`: the four
+- [x] A7 — Create `tests/DealDesk.Tests/AppraisalConstraintTests.cs`: the four
   CHECK constraints in `sql/001_init.sql` reject bad status, negative miles, a
   16-char VIN and year 1800; all five statuses insert. Mirror
   `AppraisalRoundTripTests.cs`. Spec: §A7.
