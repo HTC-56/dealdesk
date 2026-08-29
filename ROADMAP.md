@@ -10,7 +10,7 @@ are the one permitted exception to append-only docs.
 | 3 | Lifecycle + append-only audit trail | SHIPPED | D | lifecycle rules, audited status moves and field revisions, append-only trail served newest-first |
 | 4 | Recon actuals + variance | SHIPPED | E | line-by-line actuals with credits, and variance served per line, by category and per worksheet |
 | 5 | The three reports (look-to-book, recon variance, gross by appraiser) | SHIPPED | F | all three routes with per-appraiser/category rollup, basis-point rates, store totals from rows |
-| 6 | The desk page (self-contained) | PARTIAL | I | `GET /` serves the page; its test files close at §I9. Hero screenshot deferred |
+| 6 | The desk page (self-contained) | SHIPPED | I | `GET /` — self-contained page: list, worksheet with live offer math, trail, reports; hero screenshot deferred |
 | 7 | Ops surface (/healthz, /metrics, ledger, bearer auth) | SHIPPED | A, G | /metrics, the JSONL ledger and the bearer token |
 | 8 | Seeded demo data | SHIPPED | H | seed.sql, Seeder, the `seed` verb; a demo month of twelve worksheets |
 | 9 | Deploy-grade packaging (single-file publish, unit file, CI, quickstart) | PARTIAL | A | README quickstart in A4; publish, unit file, CI still open |

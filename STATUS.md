@@ -103,3 +103,9 @@ What is still NOT built: the desk page, seeded demo data, and deploy packaging.
 Phase H is closed. `dotnet run --project src/DealDesk -- seed` writes a demo month of twelve worksheets across three appraisers, covering all five lifecycle states, with recon lines in every category, postings including one credit, and six lines still unposted, so all three reports read real numbers on a fresh clone; the seed refuses to run into a database that already holds worksheets. Test count is now 208.
 
 What is still NOT built: the desk page and deploy packaging.
+
+## Phase I
+
+Phase I is closed. `GET /` serves the desk page — one self-contained HTML file with inline CSS and JS and zero external requests — carrying four panels: the appraisal list with its five lifecycle states, a worksheet with walk, recon, comps and store numbers whose offer derivation recomputes live as the desk types, the audit trail, and all three reports (look-to-book, recon variance, front gross). Test count is now 236.
+
+What is still NOT built: deploy packaging (single-file publish, example unit file, CI) and `docs/PROCESS.md`.

@@ -312,6 +312,6 @@ this phase and you never edit `index.html`. The page is served at `/` as
 - [x] I8 — Edit `README.md`: add `GET /` as the first `## The API` bullet, one
   browser sentence in the quickstart, and one desk-page paragraph. The healthz
   sample stays `005_reports`. Gate: `bash verify.sh`. Spec: §I8.
-- [ ] I9 — Run `bash verify.sh`, append a `## Phase I` section to STATUS.md,
+- [x] I9 — Run `bash verify.sh`, append a `## Phase I` section to STATUS.md,
   and flip ROADMAP row 6 to SHIPPED / phase I. Closes Phase I. Gate:
   `bash verify.sh`. Spec: §I9.
