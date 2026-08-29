@@ -160,7 +160,7 @@ recon LINE and its amount may be negative (a credit) but never zero.
 - [x] E8 — Create `tests/DealDesk.Tests/ReconActualApiTests.cs`: six HTTP
   assertions over the actuals pair (201, list order, two 400s, a credit, two
   404s). Mirror `WalkItemApiTests.cs`. Spec: §E8.
-- [ ] E9 — Create `tests/DealDesk.Tests/ReconVarianceApiTests.cs`: six HTTP
+- [x] E9 — Create `tests/DealDesk.Tests/ReconVarianceApiTests.cs`: six HTTP
   assertions over `GET .../recon-variance` (empty worksheet, unposted lines,
   a posted line, totals, byCategory, 404). Mirror `ReconActualApiTests.cs`.
   Spec: §E9.
