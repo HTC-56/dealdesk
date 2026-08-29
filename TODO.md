@@ -113,7 +113,7 @@ illegal move = 409. Every write needs `changedBy` and `reason`.
   `src/DealDesk/Api/LifecycleEndpoints.cs`, newest first (`ORDER BY id DESC`),
   mirroring the walk-item `MapGet` in `WorksheetEndpoints.cs`. The
   `AuditColumns` const already exists. Spec: §D4.
-- [ ] D5 — Create `tests/DealDesk.Tests/LifecycleTests.cs`: six rule assertions
+- [x] D5 — Create `tests/DealDesk.Tests/LifecycleTests.cs`: six rule assertions
   over `Domain/Lifecycle.cs` (forward chain, no skipping, lost from anywhere,
   terminals, case-insensitivity, Refuse). Mirror `VinTests.cs`. Spec: §D5.
 - [ ] D6 — Create `tests/DealDesk.Tests/AuditSchemaTests.cs`: six assertions
