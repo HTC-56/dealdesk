@@ -185,27 +185,27 @@ report. Rates travel as basis points (`2500` is 25.00%). Reuse
 `ReportSmokeTests.CreateAsync(client, appraiser)` and
 `ReportSmokeTests.MoveAsync(client, id, statuses…)`.
 
-- [ ] F5 — Add `GET /api/reports/front-gross` to
+- [x] F5 — Add `GET /api/reports/front-gross` to
   `src/DealDesk/Api/ReportEndpoints.cs`, mirroring the `recon-variance` route
   directly above it. `FrontGrossColumns` and `FrontGrossReport` already exist.
   Spec: §F5.
-- [ ] F6 — Create `tests/DealDesk.Tests/ReportRateTests.cs`: six laws over
+- [x] F6 — Create `tests/DealDesk.Tests/ReportRateTests.cs`: six laws over
   `Reports.RateBps` and the computed `BookRateBps` (basis points, truncation,
   a whole of zero). Mirror `LifecycleTests.cs`; no database. Spec: §F6.
-- [ ] F7 — Create `tests/DealDesk.Tests/LookToBookApiTests.cs`: six HTTP
+- [x] F7 — Create `tests/DealDesk.Tests/LookToBookApiTests.cs`: six HTTP
   assertions over `GET /api/reports/look-to-book` (two appraisers, name order,
   per-row counts, rates). Mirror `ReportSmokeTests.cs`. Spec: §F7.
-- [ ] F8 — Create `tests/DealDesk.Tests/ReconVarianceReportApiTests.cs`: six
+- [x] F8 — Create `tests/DealDesk.Tests/ReconVarianceReportApiTests.cs`: six
   HTTP assertions over `GET /api/reports/recon-variance` (empty, unposted,
   over, summed postings, a credit, category order). Mirror
   `LookToBookApiTests.cs`. Spec: §F8.
-- [ ] F9 — Create `tests/DealDesk.Tests/FrontGrossApiTests.cs`: six HTTP
+- [x] F9 — Create `tests/DealDesk.Tests/FrontGrossApiTests.cs`: six HTTP
   assertions over `GET /api/reports/front-gross` (won only, plan intact,
   overage, under, unposted, two appraisers). Mirror
   `ReconVarianceReportApiTests.cs`. Spec: §F9.
-- [ ] F10 — Edit `README.md`: add the three report routes to `## The API`, one
+- [x] F10 — Edit `README.md`: add the three report routes to `## The API`, one
   reports paragraph, and change the healthz sample's schema to `005_reports`.
   Promise nothing unbuilt. Gate: `bash verify.sh`. Spec: §F10.
-- [ ] F11 — Run `bash verify.sh`, append a `## Phase F` section to STATUS.md,
+- [x] F11 — Run `bash verify.sh`, append a `## Phase F` section to STATUS.md,
   and flip ROADMAP row 5 to SHIPPED / phase F. Closes Phase F. Gate:
   `bash verify.sh`. Spec: §F11.

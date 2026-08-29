@@ -72,3 +72,16 @@ now 124.
 What is still NOT built: the three reports (look-to-book, recon variance, gross
 by appraiser), the desk page, the ops surface beyond `/healthz`, seeded demo
 data, and deploy packaging.
+
+## Phase F
+
+Phase F is closed. Three SQL views (`report_look_to_book`,
+`report_recon_variance`, `report_front_gross`) summarise across worksheets.
+Three report routes — `GET /api/reports/look-to-book`,
+`GET /api/reports/recon-variance`, `GET /api/reports/front-gross` — serve
+store-level totals with per-appraiser or per-category breakdowns. Rates travel
+as basis points; money as whole cents. Report routes take no id and never 404.
+Test count is now 152.
+
+What is still NOT built: the desk page, the ops surface beyond `/healthz`,
+seeded demo data, and deploy packaging.

@@ -27,7 +27,7 @@ The service answers on `http://localhost:5000/healthz`:
 
 ```bash
 curl http://localhost:5000/healthz
-# {"status":"ok","schema":"004_recon_actual"}
+# {"status":"ok","schema":"005_reports"}
 ```
 
 ## The API
@@ -51,6 +51,9 @@ curl http://localhost:5000/healthz
 - `GET /api/appraisals/{id}/recon-lines/{lineId}/actuals` — posted actual costs for one estimate line
 - `POST /api/appraisals/{id}/recon-lines/{lineId}/actuals` — post an actual cost against that line
 - `GET /api/appraisals/{id}/recon-variance` — estimate vs actual, per line and by category
+- `GET /api/reports/look-to-book` — appraiser-level look-to-book rates
+- `GET /api/reports/recon-variance` — cross-worksheet recon variance by category
+- `GET /api/reports/front-gross` — planned gross minus recon variance, per appraiser
 
 **Money is whole cents.** Every money field on the wire — `estimate`, `price`,
 `pack`, `targetGross`, `anchorOverride`, `recommended` — is an integer number
@@ -69,6 +72,8 @@ lost; `lost` is reachable from any open state, and a move the lifecycle refuses
 is a 409.
 
 **Recon actuals carry their variance.** Actual costs post against a recon estimate line, many per line, and `GET .../recon-variance` serves `variance = actual − estimate` for every line, rolled up by category and for the worksheet. A positive variance means the line ran over estimate. A posting may be negative — that is a credit — but never zero, and `unpostedLines` says how many lines nothing has been spent against yet.
+
+**Three reports summarise the store.** Report routes are `GET /api/reports/...`, take no id and never 404 — an empty store is an empty report. `GET .../look-to-book` groups by appraiser, counting worksheets seen, appraised, bought and lost, with the booking rate in basis points (`2500` is 25.00%). `GET .../recon-variance` rolls every worksheet's recon lines into category rows with totals. `GET .../front-gross` counts won worksheets, subtracts recon overage from the planned gross, and flags unposted lines. Rates travel as basis points; money as whole cents.
 
 ```bash
 curl http://localhost:5000/api/appraisals/1/offer

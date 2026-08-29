@@ -9,7 +9,7 @@ are the one permitted exception to append-only docs.
 | 2 | Appraisal worksheet + offer math with visible derivation | SHIPPED | B–C | worksheet, child collections and the offer endpoint with its visible derivation |
 | 3 | Lifecycle + append-only audit trail | SHIPPED | D | lifecycle rules, audited status moves and field revisions, append-only trail served newest-first |
 | 4 | Recon actuals + variance | SHIPPED | E | line-by-line actuals with credits, and variance served per line, by category and per worksheet |
-| 5 | The three reports (look-to-book, recon variance, gross by appraiser) | PARTIAL | F | four SQL views + the look-to-book and recon-variance endpoints; the front-gross route lands at §F5 |
+| 5 | The three reports (look-to-book, recon variance, gross by appraiser) | SHIPPED | F | all three routes with per-appraiser/category rollup, basis-point rates, store totals from rows |
 | 6 | The desk page (self-contained) | NOT BUILT | — | hero screenshot |
 | 7 | Ops surface (/healthz, /metrics, ledger, bearer auth) | PARTIAL | A | /healthz only; /metrics, ledger, bearer auth still open |
 | 8 | Seeded demo data | NOT BUILT | — | |
