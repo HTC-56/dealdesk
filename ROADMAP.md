@@ -19,6 +19,12 @@ are the one permitted exception to append-only docs.
 When every row reads SHIPPED and verify.sh is green, the project is done — the
 planning lane declares PROJECT SPEC COMPLETE rather than inventing scope.
 
+**Declared 2026-08-29.** Every row reads SHIPPED and `verify.sh` is green at 264
+tests. Three items are open for a human and only a human — the publish decision
+(which unlocks the CI badge), the hero screenshot, and a stray tracked gitlink at
+`.claude/worktrees/e10-readme-recon` that must be cleared before the repo goes
+public. See NEEDS_HUMAN.md.
+
 ## Reservations ledger — small deferred calls recorded inside phase specs
 
 - **Test-runner packages beyond the pre-registered four** (Phase A,
