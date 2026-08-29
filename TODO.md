@@ -120,7 +120,7 @@ illegal move = 409. Every write needs `changedBy` and `reason`.
   over `sql/003_audit.sql` — good row inserts, three CHECKs reject, UPDATE and
   DELETE abort, parent delete blocked. Mirror `WorksheetSchemaTests.cs`.
   Spec: §D6.
-- [ ] D7 — Create `tests/DealDesk.Tests/LifecycleApiTests.cs`: six HTTP
+- [x] D7 — Create `tests/DealDesk.Tests/LifecycleApiTests.cs`: six HTTP
   assertions over `POST .../status` and `GET .../audit` (200, trail entry, 409,
   two 400s, full walk, 404s). Mirror `WalkItemApiTests.cs`. Spec: §D7.
 - [ ] D8 — Create `tests/DealDesk.Tests/RevisionApiTests.cs`: six HTTP
