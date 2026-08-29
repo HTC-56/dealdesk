@@ -31,6 +31,9 @@ public static class WorksheetEndpoints
     private const string ReconLineColumns =
         "id, appraisal_id, category, description, estimate, created_at";
 
+    private const string CompColumns =
+        "id, appraisal_id, label, model_year, miles, price, note, created_at";
+
     public static void MapWorksheetEndpoints(this IEndpointRouteBuilder routes)
     {
         ArgumentNullException.ThrowIfNull(routes);
@@ -136,6 +139,59 @@ public static class WorksheetEndpoints
                 });
 
             return Results.Created($"/api/appraisals/{id}/recon-lines/{row.Id}", row);
+        });
+
+        // Comp collection — GET + POST
+        routes.MapGet("/api/appraisals/{id:long}/comps", (Db db, long id) =>
+        {
+            using var connection = db.Open();
+
+            if (!AppraisalExists(connection, id))
+            {
+                return Results.NotFound();
+            }
+
+            var rows = connection.Query<CompView>(
+                "SELECT " + CompColumns +
+                " FROM comp WHERE appraisal_id = $id ORDER BY id;",
+                new { id });
+
+            return Results.Json(rows);
+        });
+
+        routes.MapPost("/api/appraisals/{id:long}/comps", (Db db, long id, CreateComp body) =>
+        {
+            var error = body.Validate();
+            if (error is not null)
+            {
+                return Results.BadRequest(new { error });
+            }
+
+            using var connection = db.Open();
+
+            if (!AppraisalExists(connection, id))
+            {
+                return Results.NotFound();
+            }
+
+            var row = connection.QuerySingle<CompView>(
+                """
+                INSERT INTO comp (appraisal_id, label, model_year, miles, price, note, created_at)
+                VALUES ($id, $label, $modelYear, $miles, $price, $note, $now)
+                RETURNING id, appraisal_id, label, model_year, miles, price, note, created_at;
+                """,
+                new
+                {
+                    id,
+                    label = body.Label,
+                    modelYear = body.ModelYear,
+                    miles = body.Miles,
+                    price = body.Price,
+                    note = body.Note ?? string.Empty,
+                    now = Timestamp(),
+                });
+
+            return Results.Created($"/api/appraisals/{id}/comps/{row.Id}", row);
         });
     }
 
