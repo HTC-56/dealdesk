@@ -230,7 +230,7 @@ response reaches the caller, so use `OpsSmokeTests.ScrapeUntilAsync` and
 - [x] G6 — Create `tests/DealDesk.Tests/OpsLedgerTests.cs`: six facts over
   `OpsLedger` (disabled, appends, Line fields, UTC ts, a quoted path, parent
   directory). Mirror `ReportRateTests.cs`; own temp dir per fact. Spec: §G6.
-- [ ] G7 — Create `tests/DealDesk.Tests/MetricsApiTests.cs`: six HTTP
+- [x] G7 — Create `tests/DealDesk.Tests/MetricsApiTests.cs`: six HTTP
   assertions over `GET /metrics` (content type, a 404 counted, a POST counted,
   the gauge moving, the duration family, no token needed). Mirror
   `OpsSmokeTests.cs`. Spec: §G7.
