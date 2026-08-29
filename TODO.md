@@ -16,7 +16,7 @@ Scaffold, migrator, Money and the first tests are already committed (`feat(A1)`,
 - [x] A3 — Create `scripts/scrub-check.sh`: scan `git ls-files` output for home
   paths, non-documentation IPs, `.local`/`.internal` hosts and key material;
   exit 1 listing offences. It must exclude itself. Spec: §A3.
-- [ ] A4 — Create `README.md`: what dealdesk is, requirements, quickstart
+- [x] A4 — Create `README.md`: what dealdesk is, requirements, quickstart
   (build, test, run, curl `/healthz` on localhost), layout, gates. Only
   `/healthz` exists — promise nothing else. Spec: §A4.
 - [ ] A5 — Create `tests/DealDesk.Tests/MoneyArithmeticTests.cs`: six more
