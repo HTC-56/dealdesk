@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>DealDesk</RootNamespace>
+    <AssemblyName>DealDesk</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.35" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.8" />
+  </ItemGroup>
+
+  <!-- Migrations ship inside the assembly so the single-file publish carries its
+       own schema. Logical names look like "sql.001_init.sql"; Migrator reads them. -->
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)../../sql/*.sql">
+      <LogicalName>sql.%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="DealDesk.Tests" />
+  </ItemGroup>
+
+</Project>
