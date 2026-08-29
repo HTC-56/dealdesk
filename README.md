@@ -7,7 +7,8 @@ correct .NET 8 service — every number's derivation shown, every value change
 audited, and the three reports a used-car director actually watches. Domain
 math is generic, public-domain retail-automotive arithmetic. Built
 end-to-end by an autonomous local-model coding loop; the commit history is
-part of the deliverable.
+part of the deliverable. The process by which this was built is recorded in
+docs/PROCESS.md.
 
 ## Requirements
 
@@ -96,6 +97,23 @@ curl http://localhost:5000/api/appraisals/1/offer
 - `sql/` — numbered, append-only migration scripts
 - `tests/DealDesk.Tests/` — xUnit tests
 - `scripts/` — automation (scrub-check.sh)
+- `deploy/` — example systemd unit and environment file
+- `docs/` — PROCESS.md, how the loop built this
+
+## Deploy
+
+```bash
+dotnet publish -c Release -r linux-x64
+```
+
+produces one self-contained executable that carries the .NET runtime, the
+migrations, the seed script and the desk page, so there is nothing to copy
+beside it; another runtime identifier gives another platform.
+
+`deploy/dealdesk.service` is an example systemd unit and
+`deploy/dealdesk.env.example` is the environment file it reads, naming every
+configuration key the service understands. The example binds to loopback and
+a reverse proxy belongs in front of it.
 
 ## Gates
 
