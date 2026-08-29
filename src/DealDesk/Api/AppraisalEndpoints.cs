@@ -31,5 +31,20 @@ public static class AppraisalEndpoints
 
             return row is null ? Results.NotFound() : Results.Json(row);
         });
+
+        routes.MapGet("/api/appraisals", (Db db, string? status) =>
+        {
+            using var connection = db.Open();
+
+            var sql = string.IsNullOrWhiteSpace(status)
+                ? "SELECT " + Columns + " FROM appraisal ORDER BY id DESC"
+                : "SELECT " + Columns + " FROM appraisal WHERE status = $status ORDER BY id DESC";
+
+            var rows = connection.Query<AppraisalView>(
+                sql,
+                new { status });
+
+            return Results.Json(rows);
+        });
     }
 }

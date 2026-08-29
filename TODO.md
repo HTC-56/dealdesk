@@ -56,7 +56,7 @@ format --verify-no-changes`, `bash scripts/scrub-check.sh`.** Demo VINs:
   `sql/002_worksheet.sql` CHECK constraints on recon_line, comp, walk_item and
   offer_input, plus cascade delete. Mirror `AppraisalConstraintTests.cs`.
   Spec: §B7.
-- [ ] B8 — Add `GET /api/appraisals` (every row, newest first, optional
+- [x] B8 — Add `GET /api/appraisals` (every row, newest first, optional
   `status` filter) to `src/DealDesk/Api/AppraisalEndpoints.cs`, mirroring the
   `{id:long}` handler right above it. Spec: §B8.
 - [ ] B9 — Add `POST /api/appraisals` to
