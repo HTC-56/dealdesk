@@ -62,7 +62,7 @@ format --verify-no-changes`, `bash scripts/scrub-check.sh`.** Demo VINs:
 - [x] B9 — Add `POST /api/appraisals` to
   `src/DealDesk/Api/AppraisalEndpoints.cs`: `Validate()` → 400, else insert a
   draft row with `RETURNING id` → 201 + Location. Spec: §B9.
-- [ ] B10 — Create `tests/DealDesk.Tests/AppraisalApiTests.cs`: six HTTP
+- [x] B10 — Create `tests/DealDesk.Tests/AppraisalApiTests.cs`: six HTTP
   assertions over POST and GET (201, round-trip, two 400s, the list, 404).
   Mirror `HealthzTests.cs`; served JSON is camelCase. Spec: §B10.
 - [ ] B11 — Run `bash verify.sh`, append a `## Phase B` section to STATUS.md,

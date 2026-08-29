@@ -76,6 +76,7 @@ public static class AppraisalEndpoints
                     trim = body.TrimLevel ?? string.Empty,
                     miles = body.Miles,
                     appraiser = body.Appraiser,
+                    now,
                 });
 
             return Results.Created($"/api/appraisals/{id}", new { id });
