@@ -7,7 +7,7 @@ are the one permitted exception to append-only docs.
 |---|---|---|---|---|
 | 1 | .NET 8 minimal API + SQLite/Dapper + migrator | SHIPPED | A | scaffold, migrator, Money, 001_init, Phase A gates |
 | 2 | Appraisal worksheet + offer math with visible derivation | SHIPPED | B–C | worksheet, child collections and the offer endpoint with its visible derivation |
-| 3 | Lifecycle + append-only audit trail | NOT BUILT | — | |
+| 3 | Lifecycle + append-only audit trail | PARTIAL | D | rules, status moves and audited revisions shipped; trail endpoint + tests are the open Phase D tasks |
 | 4 | Recon actuals + variance | NOT BUILT | — | |
 | 5 | The three reports (look-to-book, recon variance, gross by appraiser) | NOT BUILT | — | |
 | 6 | The desk page (self-contained) | NOT BUILT | — | hero screenshot |
@@ -74,6 +74,34 @@ planning lane declares PROJECT SPEC COMPLETE rather than inventing scope.
   `POST` that could duplicate. A worksheet the desk has never priced reads back
   pack 0 / target 0 rather than 404 — the appraisal exists, its store numbers
   are just untyped.
+- **`lost` is reachable from every open state** (Phase D,
+  `src/DealDesk/Domain/Lifecycle.cs`). SPEC.md draws the chain
+  draft → appraised → presented → won | lost without saying where `lost`
+  branches from. Taken as: any open state may go to `lost` (a deal dies
+  whenever the customer walks), but `won` only follows `presented` — nobody
+  buys a vehicle they were never shown an offer on. Both are terminal and a
+  move to the state already held is refused, since it would write no audit row.
+- **The audit table has no cascade, and cannot be rewritten** (Phase D,
+  `sql/003_audit.sql`). Two BEFORE triggers abort UPDATE and DELETE, so the FK
+  to `appraisal` deliberately omits `ON DELETE CASCADE` — deleting an appraisal
+  that has a trail fails rather than taking the evidence with it. Every other
+  child table in the repo cascades. dealdesk exposes no delete route, so no
+  endpoint changes behaviour; revisit only if feature 9 ever needs a purge.
+- **The trail records one row per field, valued as text** (Phase D,
+  `sql/003_audit.sql`). One `audit_entry` row per changed FIELD rather than per
+  request, so a later report can ask "when did this number move" of one column.
+  `old_value`/`new_value` are TEXT whatever the source column's type is,
+  because one trail carries a status word, an odometer integer and a person's
+  name; nothing downstream does arithmetic on an audit value. `field` holds the
+  camelCase API name (`modelYear`, not `model_year`) — the trail names what the
+  caller sent.
+- **VIN and status are not PATCHable; a closed worksheet still is** (Phase D,
+  `src/DealDesk/Api/AuditDtos.cs`). `PATCH /api/appraisals/{id}` covers
+  modelYear, make, model, trimLevel, miles and appraiser. VIN is the vehicle's
+  identity — correcting it means the worksheet was opened on the wrong car —
+  and status moves through the lifecycle route, which checks the transition.
+  Edits to a `won`/`lost` worksheet are allowed rather than refused: SPEC.md
+  states no such rule, and the trail records who changed a closed file and why.
 - **`HealthzTests` asserts the newest available migration** (Phase B,
   `tests/DealDesk.Tests/HealthzTests.cs`). It hardcoded `001_`, which adding
   `002_worksheet.sql` would have dated; it now compares against
