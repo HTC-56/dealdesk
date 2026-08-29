@@ -79,10 +79,10 @@ and its path constants.
   lanes, the shape of a phase, the ledger counted with the command in the
   spec, what went wrong, what was deferred. Name no vendor and no model.
   Gate: `bash verify.sh`. Spec: §J9.
-- [ ] J10 — Edit `README.md`: add a `## Deploy` section after `## Layout`, two
+- [x] J10 — Edit `README.md`: add a `## Deploy` section after `## Layout`, two
   `## Layout` bullets, one PROCESS.md sentence in the intro. No `./` paths in
   fenced blocks — `verify.sh` lints those. No CI badge. Gate: `bash verify.sh`.
   Spec: §J10.
-- [ ] J11 — Run `bash verify.sh`, append a `## Phase J` section to STATUS.md,
+- [x] J11 — Run `bash verify.sh`, append a `## Phase J` section to STATUS.md,
   and flip ROADMAP row 9 and the `docs/PROCESS.md` row to SHIPPED. Closes
   Phase J and the project. Gate: `bash verify.sh`. Spec: §J11.
