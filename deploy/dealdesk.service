@@ -1,0 +1,62 @@
+# Example systemd unit for dealdesk — copy to /etc/systemd/system/dealdesk.service
+# and adjust the paths below. It is an EXAMPLE: nothing in this repo installs
+# it, and no path named here exists until an operator creates it.
+#
+#   useradd --system --home-dir /var/lib/dealdesk --create-home dealdesk
+#   install -D -m 0755 ./DealDesk /opt/dealdesk/DealDesk
+#   install -D -m 0640 deploy/dealdesk.env.example /etc/dealdesk/dealdesk.env
+#   systemctl daemon-reload && systemctl enable --now dealdesk
+#
+# `DealDesk` is the published binary from
+# `dotnet publish -c Release -r linux-x64` — one self-contained file carrying
+# its own runtime, its migrations, its seed script and the desk page. There is
+# nothing to copy beside it.
+
+[Unit]
+Description=dealdesk — used-car appraisal desk
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+# Type=exec, not notify: dealdesk is a plain Kestrel host and does not signal
+# readiness to systemd. Announcing readiness would mean taking a dependency
+# this repo has not pre-registered, so the unit is told the truth instead.
+Type=exec
+
+# The binary and the data are kept apart: the executable is read-only under
+# /opt, and everything the service writes — the SQLite file, the JSONL ops
+# ledger, the single-file bundle it unpacks itself into — lives under
+# WorkingDirectory and is named by the environment file.
+ExecStart=/opt/dealdesk/DealDesk
+WorkingDirectory=/var/lib/dealdesk
+EnvironmentFile=/etc/dealdesk/dealdesk.env
+StateDirectory=dealdesk
+
+User=dealdesk
+Group=dealdesk
+
+Restart=on-failure
+RestartSec=5s
+
+# The service is one process serving one SQLite file. It needs no privilege,
+# no other user's data, and no write access outside its own state directory.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+LockPersonality=true
+ReadWritePaths=/var/lib/dealdesk
+
+# dealdesk makes zero outbound requests, so it needs only the socket it listens
+# on. The environment file binds it to the loopback address; put a reverse
+# proxy in front of it before anything but the machine itself can reach the
+# desk page.
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=multi-user.target
