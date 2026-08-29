@@ -88,7 +88,7 @@ scripts/scrub-check.sh`.** Money on the wire is whole cents; JSON is camelCase.
 - [x] C6 — Create `tests/DealDesk.Tests/WorksheetApiTests.cs`: six HTTP
   assertions over recon-lines and comps (201s, two 400s, the list, a 404).
   Mirror `WalkItemApiTests.cs`. Spec: §C6.
-- [ ] C7 — Create `tests/DealDesk.Tests/OfferApiTests.cs`: six HTTP assertions
+- [x] C7 — Create `tests/DealDesk.Tests/OfferApiTests.cs`: six HTTP assertions
   over `/offer-inputs` and `/offer` that `OfferSmokeTests.cs` does not already
   cover. Mirror `OfferSmokeTests.cs`. Spec: §C7.
 - [x] C8 — Edit `README.md`: add one `## The API` section listing every route
