@@ -130,6 +130,6 @@ illegal move = 409. Every write needs `changedBy` and `reason`.
 - [x] D9 — Edit `README.md`: add the three new routes to `## The API`, one
   audit paragraph, and change the healthz sample's schema to `003_audit`.
   Promise nothing unbuilt. Gate: `bash verify.sh`. Spec: §D9.
-- [ ] D10 — Run `bash verify.sh`, append a `## Phase D` section to STATUS.md,
+- [x] D10 — Run `bash verify.sh`, append a `## Phase D` section to STATUS.md,
   and flip ROADMAP row 3 to SHIPPED / phase D. Closes Phase D. Gate:
   `bash verify.sh`. Spec: §D10.

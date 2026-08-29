@@ -45,3 +45,18 @@ What is still NOT built: lifecycle and the audit trail, recon actuals and
 variance, the three reports (look-to-book, recon variance, gross by appraiser),
 the desk page, the ops surface beyond `/healthz`, seeded demo data, and deploy
 packaging.
+
+## Phase D
+
+Phase D is closed. The lifecycle engine enforces the five-state chain
+draft → appraised → presented → won | lost with `lost` reachable from any open
+state, illegal moves refused as 409, and unknown status words rejected as 400.
+Every value change appends to an append-only `audit_entry` table (one row per
+field, values as text) inside the same transaction as the UPDATE. The trail is
+served newest-first via `GET .../audit`. Field-level revisions (PATCH) cover
+model year, make, model, trim, miles and appraiser; VIN and status are not
+PATCHable. Test count is now 100.
+
+What is still NOT built: recon actuals and variance, the three reports
+(look-to-book, recon variance, gross by appraiser), the desk page, the ops
+surface beyond `/healthz`, seeded demo data, and deploy packaging.

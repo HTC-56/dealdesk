@@ -7,7 +7,7 @@ are the one permitted exception to append-only docs.
 |---|---|---|---|---|
 | 1 | .NET 8 minimal API + SQLite/Dapper + migrator | SHIPPED | A | scaffold, migrator, Money, 001_init, Phase A gates |
 | 2 | Appraisal worksheet + offer math with visible derivation | SHIPPED | B–C | worksheet, child collections and the offer endpoint with its visible derivation |
-| 3 | Lifecycle + append-only audit trail | PARTIAL | D | rules, status moves, audited revisions and the trail endpoint shipped; tests + docs are the open Phase D tasks |
+| 3 | Lifecycle + append-only audit trail | SHIPPED | D | lifecycle rules, audited status moves and field revisions, append-only trail served newest-first |
 | 4 | Recon actuals + variance | NOT BUILT | — | |
 | 5 | The three reports (look-to-book, recon variance, gross by appraiser) | NOT BUILT | — | |
 | 6 | The desk page (self-contained) | NOT BUILT | — | hero screenshot |
