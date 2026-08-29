@@ -71,8 +71,8 @@ format --verify-no-changes`, `bash scripts/scrub-check.sh`.** Demo VINs:
 
 ## Phase C: child collections and the priced offer — see TASK_PHASE_C.md
 
-Phases A and B above are CLOSED and kept only as style references. **Phase C is
-the open one.** `WorksheetDtos.cs`, `WorksheetEndpoints.cs` (the walk-item
+Phases A and B above are CLOSED and kept only as style references. Phase C is
+CLOSED too. `WorksheetDtos.cs`, `WorksheetEndpoints.cs` (the walk-item
 pair) and `OfferEndpoints.cs` are already committed (`feat(C1)`–`feat(C3)`);
 the tree is green at 64 tests. **Gate for every task: `dotnet build
 -warnaserror`, `dotnet test`, `dotnet format --verify-no-changes`, `bash
@@ -97,3 +97,39 @@ scripts/scrub-check.sh`.** Money on the wire is whole cents; JSON is camelCase.
 - [x] C9 — Run `bash verify.sh`, append a `## Phase C` section to STATUS.md,
   and flip ROADMAP row 2 to SHIPPED / phase B–C. Closes Phase C. Gate:
   `bash verify.sh`. Spec: §C9.
+
+## Phase D: lifecycle and the audit trail — see TASK_PHASE_D.md
+
+Phases A–C above are CLOSED and kept only as style references. **Phase D is the
+open one.** `sql/003_audit.sql`, `Domain/Lifecycle.cs`, `Api/AuditDtos.cs` and
+`Api/LifecycleEndpoints.cs` are already committed (`feat(D1)`–`feat(D3)`); the
+tree is green at 76 tests. **Gate for every task: `dotnet build -warnaserror`,
+`dotnet test`, `dotnet format --verify-no-changes`, `bash
+scripts/scrub-check.sh`.** Lifecycle: draft → appraised → presented → won |
+lost, with `lost` reachable from any open state. Unknown status word = 400;
+illegal move = 409. Every write needs `changedBy` and `reason`.
+
+- [x] D4 — Add `GET /api/appraisals/{id}/audit` to
+  `src/DealDesk/Api/LifecycleEndpoints.cs`, newest first (`ORDER BY id DESC`),
+  mirroring the walk-item `MapGet` in `WorksheetEndpoints.cs`. The
+  `AuditColumns` const already exists. Spec: §D4.
+- [ ] D5 — Create `tests/DealDesk.Tests/LifecycleTests.cs`: six rule assertions
+  over `Domain/Lifecycle.cs` (forward chain, no skipping, lost from anywhere,
+  terminals, case-insensitivity, Refuse). Mirror `VinTests.cs`. Spec: §D5.
+- [ ] D6 — Create `tests/DealDesk.Tests/AuditSchemaTests.cs`: six assertions
+  over `sql/003_audit.sql` — good row inserts, three CHECKs reject, UPDATE and
+  DELETE abort, parent delete blocked. Mirror `WorksheetSchemaTests.cs`.
+  Spec: §D6.
+- [ ] D7 — Create `tests/DealDesk.Tests/LifecycleApiTests.cs`: six HTTP
+  assertions over `POST .../status` and `GET .../audit` (200, trail entry, 409,
+  two 400s, full walk, 404s). Mirror `WalkItemApiTests.cs`. Spec: §D7.
+- [ ] D8 — Create `tests/DealDesk.Tests/RevisionApiTests.cs`: six HTTP
+  assertions over `PATCH /api/appraisals/{id}` (200, one trail entry, two
+  entries, no-op writes none, two 400s, 404). Mirror `LifecycleApiTests.cs`.
+  Spec: §D8.
+- [ ] D9 — Edit `README.md`: add the three new routes to `## The API`, one
+  audit paragraph, and change the healthz sample's schema to `003_audit`.
+  Promise nothing unbuilt. Gate: `bash verify.sh`. Spec: §D9.
+- [ ] D10 — Run `bash verify.sh`, append a `## Phase D` section to STATUS.md,
+  and flip ROADMAP row 3 to SHIPPED / phase D. Closes Phase D. Gate:
+  `bash verify.sh`. Spec: §D10.

@@ -151,6 +151,23 @@ public static class LifecycleEndpoints
 
             return Results.Json(row);
         });
+
+        routes.MapGet("/api/appraisals/{id:long}/audit", (Db db, long id) =>
+        {
+            using var connection = db.Open();
+
+            if (!WorksheetEndpoints.AppraisalExists(connection, id))
+            {
+                return Results.NotFound();
+            }
+
+            var rows = connection.Query<AuditEntryView>(
+                "SELECT " + AuditColumns +
+                " FROM audit_entry WHERE appraisal_id = $id ORDER BY id DESC;",
+                new { id });
+
+            return Results.Json(rows);
+        });
     }
 
     /// Selected in schema order so Dapper's underscore matching does the
