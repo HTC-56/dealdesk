@@ -94,6 +94,6 @@ scripts/scrub-check.sh`.** Money on the wire is whole cents; JSON is camelCase.
 - [x] C8 — Edit `README.md`: add one `## The API` section listing every route
   that now exists, the cents rule, the derivation rule, and one curl example.
   Promise nothing unbuilt. Gate: `bash verify.sh`. Spec: §C8.
-- [ ] C9 — Run `bash verify.sh`, append a `## Phase C` section to STATUS.md,
+- [x] C9 — Run `bash verify.sh`, append a `## Phase C` section to STATUS.md,
   and flip ROADMAP row 2 to SHIPPED / phase B–C. Closes Phase C. Gate:
   `bash verify.sh`. Spec: §C9.

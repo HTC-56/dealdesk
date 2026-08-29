@@ -33,3 +33,15 @@ status filter). Test count is now 56.
 What is still NOT built: the walk / recon / comp endpoints, the offer endpoint
 that serves the derivation, the desk page. Lifecycle, audit, recon actuals and
 the reports remain untouched.
+
+## Phase C
+
+Phase C is closed. The worksheet's child collections — walk, recon-line, and
+comparable-sale — are all on the wire (GET + POST each). The offer endpoint
+(`GET .../offer`) serves the recommended trade value together with its full
+derivation array, and the store numbers upsert cleanly. Test count is now 76.
+
+What is still NOT built: lifecycle and the audit trail, recon actuals and
+variance, the three reports (look-to-book, recon variance, gross by appraiser),
+the desk page, the ops surface beyond `/healthz`, seeded demo data, and deploy
+packaging.
