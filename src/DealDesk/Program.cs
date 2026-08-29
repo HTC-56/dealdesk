@@ -75,6 +75,10 @@ app.MapReconEndpoints();
 app.MapReportEndpoints();
 app.MapOpsEndpoints();
 
+// The desk page is mapped last because it is the only route that answers "/":
+// everything above it is the API the page itself calls.
+app.MapPageEndpoints();
+
 app.Run();
 
 /// Named so the in-process integration tests can boot this exact app through
