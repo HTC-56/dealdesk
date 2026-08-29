@@ -57,7 +57,7 @@ disk rather than over HTTP — no factory, no client, no `async`. Reuse
 `PackagingSmokeTests.ReadRepoFile()`, `.SettingLines()`, `.ConfigurationKeys()`
 and its path constants.
 
-- [ ] J5 — Create `tests/DealDesk.Tests/PublishProfileTests.cs`: six facts
+- [x] J5 — Create `tests/DealDesk.Tests/PublishProfileTests.cs`: six facts
   about the publish shape read off the csproj (the five properties sit inside
   the RID-conditioned group, no pinned RID, no trim, embedded symbols, both
   embedded resources, two packages). Mirror `PackagingSmokeTests.cs`.
