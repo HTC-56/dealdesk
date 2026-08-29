@@ -302,7 +302,7 @@ this phase and you never edit `index.html`. The page is served at `/` as
   `DoesNotContain` facts pinning zero external requests (no `://`, no script
   src, no link/@import, no font/img, one inline block of each, inline
   behaviour). Mirror `DeskPageSmokeTests.cs`. Spec: §I5.
-- [ ] I6 — Create `tests/DealDesk.Tests/DeskPagePanelTests.cs`: six facts that
+- [x] I6 — Create `tests/DealDesk.Tests/DeskPagePanelTests.cs`: six facts that
   each panel carries what SPEC feature 6 says (panel order, five statuses,
   eight recon categories, the derivation, the trail columns, three report
   tables). Mirror `DeskPageSmokeTests.cs`. Spec: §I6.
