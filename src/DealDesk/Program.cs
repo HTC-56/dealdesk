@@ -28,9 +28,11 @@ app.MapGet("/healthz", (Db db) =>
     });
 });
 
-// Worksheet endpoints live in Api/AppraisalEndpoints.cs so this file stays a
-// wiring file rather than growing a handler per feature.
+// Worksheet endpoints live under Api/ so this file stays a wiring file rather
+// than growing a handler per feature: the appraisal itself, its child
+// collections, and the offer math that prices them.
 app.MapAppraisalEndpoints();
+app.MapWorksheetEndpoints();
 
 app.Run();
 
