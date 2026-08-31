@@ -1,5 +1,7 @@
 # dealdesk
 
+[![CI](https://github.com/HTC-56/dealdesk/actions/workflows/ci.yml/badge.svg)](https://github.com/HTC-56/dealdesk/actions/workflows/ci.yml)
+
 Every used-car department runs the same arithmetic on every trade: what the
 vehicle needs, what the market says, what the store must make, therefore
 what to put on the worksheet. dealdesk is that appraisal desk as a small,
