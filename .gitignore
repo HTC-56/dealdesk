@@ -6,3 +6,4 @@ obj/
 .loop-paused
 .escalate-rung
 ledger.jsonl
+.claude/
