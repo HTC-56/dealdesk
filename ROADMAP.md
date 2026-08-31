@@ -10,7 +10,7 @@ are the one permitted exception to append-only docs.
 | 3 | Lifecycle + append-only audit trail | SHIPPED | D | lifecycle rules, audited status moves and field revisions, append-only trail served newest-first |
 | 4 | Recon actuals + variance | SHIPPED | E | line-by-line actuals with credits, and variance served per line, by category and per worksheet |
 | 5 | The three reports (look-to-book, recon variance, gross by appraiser) | SHIPPED | F | all three routes with per-appraiser/category rollup, basis-point rates, store totals from rows |
-| 6 | The desk page (self-contained) | SHIPPED | I | `GET /` — self-contained page: list, worksheet with live offer math, trail, reports; hero screenshot deferred |
+| 6 | The desk page (self-contained) | SHIPPED | I | `GET /` — self-contained page: list, worksheet with live offer math, trail, reports; hero screenshot committed 2026-08-30 |
 | 7 | Ops surface (/healthz, /metrics, ledger, bearer auth) | SHIPPED | A, G | /metrics, the JSONL ledger and the bearer token |
 | 8 | Seeded demo data | SHIPPED | H | seed.sql, Seeder, the `seed` verb; a demo month of twelve worksheets |
 | 9 | Deploy-grade packaging (single-file publish, unit file, CI, quickstart) | SHIPPED | A, J | single-file publish, example unit and env file, CI on four gates; README quickstart from A4 |
@@ -20,10 +20,10 @@ When every row reads SHIPPED and verify.sh is green, the project is done — the
 planning lane declares PROJECT SPEC COMPLETE rather than inventing scope.
 
 **Declared 2026-08-29.** Every row reads SHIPPED and `verify.sh` is green at 264
-tests. Three items are open for a human and only a human — the publish decision
-(which unlocks the CI badge), the hero screenshot, and a stray tracked gitlink at
-`.claude/worktrees/e10-readme-recon` that must be cleared before the repo goes
-public. See NEEDS_HUMAN.md.
+tests. Three items were open for a human and only a human — the publish decision
+(which unlocks the CI badge), the hero screenshot (done 2026-08-30), and a stray
+tracked gitlink at `.claude/worktrees/e10-readme-recon` that must be cleared
+before the repo goes public. See NEEDS_HUMAN.md.
 
 ## Reservations ledger — small deferred calls recorded inside phase specs
 
@@ -253,12 +253,13 @@ public. See NEEDS_HUMAN.md.
   split and integer multiplication — never by `parseFloat`. The API's rule
   that a JSON number is a double in a browser is exactly as true inside the
   browser, so nothing this page renders was ever a floating-point dollar.
-- **NULL RESULT — no hero screenshot is committed** (Phase I). SPEC.md
-  feature 6 ends "The README hero screenshot", and feature 9 wants it in the
-  README. The loop has no browser and cannot open the page, so a screenshot
-  would be an image nobody in this lane could verify was of this page. §I8
-  tells a reader to open `/` instead, and the binary is left for a human with
-  a browser. This is the one part of feature 6 the loop did not ship.
+- **NULL RESULT retired 2026-08-30 — the hero screenshot is committed**
+  (Phase I). The loop had no browser and could not verify an image was of
+  this page, so it recorded a null result and §I8 pointed readers at `/`
+  instead. A human-lane session ran the seeded demo, captured `GET /` with
+  a real Chromium, verified the image shows the desk page over the demo
+  month, and committed it as `docs/hero.png`, referenced from the README.
+  Feature 6 is now fully shipped.
 - **The single-file publish is not trimmed** (Phase J,
   `src/DealDesk/DealDesk.csproj`). SPEC.md feature 9 asks for a single-file
   self-contained binary and says nothing about size. `PublishTrimmed` is

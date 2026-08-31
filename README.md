@@ -10,6 +10,8 @@ end-to-end by an autonomous local-model coding loop; the commit history is
 part of the deliverable. The process by which this was built is recorded in
 docs/PROCESS.md.
 
+![dealdesk — the desk page over a seeded demo month](docs/hero.png)
+
 ## Requirements
 
 - .NET 8 SDK
